@@ -24,21 +24,17 @@ public class SimpleBreakerTests {
     }
 
     @Test
-    public void simpleTest() {
+    public void testDoFailBrokenMethods() {
         Breaker breaker = BreakerBuilder.newBuilder().build();
 
         assertNotNull(breaker);
 
         IntStream.range(0, 5).forEach(j ->
 
-            breaker.tryDo(() -> {
-                doCalled();
-                if (j == 2) throw new RuntimeException();
-            }).onFail(() -> {
-                onFailCalled();
-            }).ifBroken(() -> {
-                ifBrokenCalled();
-            })
+                        breaker.tryDo(() -> {
+                            doCalled();
+                            if (j == 2) throw new RuntimeException();
+                        }, this::onFailCalled, this::ifBrokenCalled)
 
         );
 
@@ -48,6 +44,50 @@ public class SimpleBreakerTests {
                 Call.DO, Call.FAILED, Call.BROKEN, // Fail on the third iteration, calling fail handler and broken handler too
                 Call.BROKEN, // Just call broken handler
                 Call.BROKEN), doCalls);
+    }
+
+    @Test
+    public void testDoBrokenMethods() {
+        Breaker breaker = BreakerBuilder.newBuilder().build();
+
+        assertNotNull(breaker);
+
+        IntStream.range(0, 5).forEach(j ->
+
+                        breaker.tryDo(() -> {
+                            doCalled();
+                            if (j == 2) throw new RuntimeException();
+                        }, this::ifBrokenCalled)
+
+        );
+
+        assertEquals(asList(
+                Call.DO,
+                Call.DO,
+                Call.DO, Call.BROKEN, // Fail on the third iteration, calling broken handler too
+                Call.BROKEN, // Just call broken handler
+                Call.BROKEN), doCalls);
+    }
+
+    @Test
+    public void testJustDoMethod() {
+        Breaker breaker = BreakerBuilder.newBuilder().build();
+
+        assertNotNull(breaker);
+
+        IntStream.range(0, 5).forEach(j ->
+
+                        breaker.tryDo(() -> {
+                            doCalled();
+                            if (j == 2) throw new RuntimeException();
+                        })
+
+        );
+
+        assertEquals(asList(
+                Call.DO,
+                Call.DO,
+                Call.DO), doCalls);
     }
 
     private void ifBrokenCalled() {

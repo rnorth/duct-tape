@@ -4,7 +4,16 @@ package org.rnorth.circuitbreakers;
  * @author richardnorth
  */
 public interface Breaker {
-    VoidResult tryDo(Runnable runnable);
+
+    void tryDo(Runnable tryIfAlive, Runnable runOnFirstFailure, Runnable doIfBroken);
+
+    void tryDo(Runnable tryIfAlive, Runnable doIfBroken);
+
+    void tryDo(Runnable tryIfAlive);
+
+    static void NoOp() {
+        // No-op
+    }
 
     public enum State {
         ALIVE, BROKEN

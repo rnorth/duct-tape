@@ -8,18 +8,27 @@ public class LocalBreaker implements Breaker {
     private State state = State.ALIVE;
 
     @Override
-    public VoidResult tryDo(Runnable runnable) {
-
+    public void tryDo(Runnable tryIfAlive, Runnable runOnFirstFailure, Runnable doIfBroken) {
         if (state == State.BROKEN) {
-            return new VoidResult.VoidBrokenResult();
+            doIfBroken.run();
+        } else {
+            try {
+                tryIfAlive.run();
+            } catch (Exception e) {
+                state = State.BROKEN;
+                runOnFirstFailure.run();
+                doIfBroken.run();
+            }
         }
+    }
 
-        try {
-            runnable.run();
-            return new VoidResult.VoidSuccessResult();
-        } catch (Exception e) {
-            state = State.BROKEN;
-            return new VoidResult.VoidFailureResult();
-        }
+    @Override
+    public void tryDo(Runnable tryIfAlive, Runnable doIfBroken) {
+        tryDo(tryIfAlive, Breaker::NoOp, doIfBroken);
+    }
+
+    @Override
+    public void tryDo(Runnable tryIfAlive) {
+        tryDo(tryIfAlive, Breaker::NoOp, Breaker::NoOp);
     }
 }
