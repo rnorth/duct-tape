@@ -13,6 +13,12 @@ public class TimeSource {
 
         private long currentTimeMillis = 0L;
 
+        public DummyTimeSource() {}
+
+        public DummyTimeSource(long fixedValue) {
+            this.currentTimeMillis = fixedValue;
+        }
+
         @Override
         public long getTimeMillis() {
             return currentTimeMillis;

@@ -13,14 +13,14 @@ public class LocalBreaker implements Breaker {
     private final TimeSource timeSource;
     private final long autoResetInterval;
     private final TimeUnit autoResetUnit;
-    private State state = State.ALIVE;
-    private long lastFailure;
+    private final StateStore stateStore;
 
-    LocalBreaker(TimeSource timeSource, long autoResetInterval, TimeUnit autoResetUnit) {
+    LocalBreaker(TimeSource timeSource, long autoResetInterval, TimeUnit autoResetUnit, StateStore stateStore) {
 
         this.timeSource = timeSource;
         this.autoResetInterval = autoResetInterval;
         this.autoResetUnit = autoResetUnit;
+        this.stateStore = stateStore;
     }
 
     @Override
@@ -30,10 +30,10 @@ public class LocalBreaker implements Breaker {
         } else {
             try {
                 tryIfAlive.run();
-                state = State.ALIVE;
+                setState(State.ALIVE);
             } catch (Exception e) {
-                state = State.BROKEN;
-                lastFailure = timeSource.getTimeMillis();
+                setState(State.BROKEN);
+                setLastFailure(timeSource.getTimeMillis());
                 runOnFirstFailure.run();
                 runIfBroken.run();
             }
@@ -57,11 +57,11 @@ public class LocalBreaker implements Breaker {
         } else {
             try {
                 T callResult = tryIfAlive.call();
-                state = State.ALIVE;
+                setState(State.ALIVE);
                 return callResult;
             } catch (Exception e) {
-                state = State.BROKEN;
-                lastFailure = timeSource.getTimeMillis();
+                setState(State.BROKEN);
+                setLastFailure(timeSource.getTimeMillis());
                 runOnFirstFailure.run();
                 return getIfBroken.get();
             }
@@ -80,10 +80,18 @@ public class LocalBreaker implements Breaker {
 
     @Override
     public State getState() {
-        return state;
+        return this.stateStore.getState();
     }
 
     private boolean isBroken() {
-        return state == State.BROKEN && ( timeSource.getTimeMillis() - autoResetUnit.toMillis(autoResetInterval)) < lastFailure;
+        return this.stateStore.getState() == State.BROKEN && (timeSource.getTimeMillis() - autoResetUnit.toMillis(autoResetInterval)) < this.stateStore.getLastFailure();
+    }
+
+    private void setState(State state) {
+        this.stateStore.setState(state);
+    }
+
+    private void setLastFailure(long lastFailure) {
+        this.stateStore.setLastFailure(lastFailure);
     }
 }
