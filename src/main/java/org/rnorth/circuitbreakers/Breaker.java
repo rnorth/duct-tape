@@ -25,6 +25,8 @@ public interface Breaker {
 
     <T> Optional<T> tryGet(Callable<T> tryIfAlive);
 
+    State getState();
+
     public enum State {
         ALIVE, BROKEN
     }
