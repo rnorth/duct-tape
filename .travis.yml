@@ -1,4 +1,12 @@
 language: java
+
 jdk:
- - oraclejdk8
+- oraclejdk8
+
 sudo: false
+
+env:
+- TERM=dumb
+
+after_success:
+- ./gradlew jacocoTestReport coveralls
