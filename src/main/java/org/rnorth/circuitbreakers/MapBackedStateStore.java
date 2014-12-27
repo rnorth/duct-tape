@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * @author richardnorth
  */
-public class MapBackedStateStore implements StateStore {
+class MapBackedStateStore implements StateStore {
     private final Map<String, Object> map;
     private final String keyPrefix;
 
@@ -15,12 +15,12 @@ public class MapBackedStateStore implements StateStore {
     }
 
     @Override
-    public Breaker.State getState() {
-        return (Breaker.State) this.map.getOrDefault(keyPrefix + "_STATE", Breaker.State.ALIVE);
+    public State getState() {
+        return (State) this.map.getOrDefault(keyPrefix + "_STATE", State.ALIVE);
     }
 
     @Override
-    public void setState(Breaker.State state) {
+    public void setState(State state) {
         this.map.put(keyPrefix + "_STATE", state);
     }
 

@@ -31,23 +31,23 @@ public class AutoResetTests {
                 .build();
 
         // Simulate a failure
-        assertEquals(Breaker.State.ALIVE, breaker.getState());
+        assertEquals(State.ALIVE, breaker.getState());
         breaker.tryDo(() -> {
             throw new RuntimeException();
         });
-        assertEquals(Breaker.State.BROKEN, breaker.getState());
+        assertEquals(State.BROKEN, breaker.getState());
 
         // Next call should not fire the block
         breaker.tryDo(() -> fail("Should not be invoked"));
-        assertEquals(Breaker.State.BROKEN, breaker.getState());
+        assertEquals(State.BROKEN, breaker.getState());
 
         dummyTimeSource.setCurrentTimeMillis(4999);
         breaker.tryDo(() -> fail("Should not be invoked"));
-        assertEquals(Breaker.State.BROKEN, breaker.getState());
+        assertEquals(State.BROKEN, breaker.getState());
 
         dummyTimeSource.setCurrentTimeMillis(5000);
         breaker.tryDo(this::wasInvoked, () -> fail("Should not be invoked"));
-        assertEquals(Breaker.State.ALIVE, breaker.getState());
+        assertEquals(State.ALIVE, breaker.getState());
         assertTrue(invoked);
     }
 
@@ -61,23 +61,23 @@ public class AutoResetTests {
                 .build();
 
         // Simulate a failure
-        assertEquals(Breaker.State.ALIVE, breaker.getState());
+        assertEquals(State.ALIVE, breaker.getState());
         breaker.tryGet(() -> {
             throw new RuntimeException();
         });
-        assertEquals(Breaker.State.BROKEN, breaker.getState());
+        assertEquals(State.BROKEN, breaker.getState());
 
         // Next call should not fire the block
         assertEquals("B", breaker.tryGet(() -> "A", () -> "B"));
-        assertEquals(Breaker.State.BROKEN, breaker.getState());
+        assertEquals(State.BROKEN, breaker.getState());
 
         dummyTimeSource.setCurrentTimeMillis(4999);
         assertEquals("B", breaker.tryGet(() -> "A", () -> "B"));
-        assertEquals(Breaker.State.BROKEN, breaker.getState());
+        assertEquals(State.BROKEN, breaker.getState());
 
         dummyTimeSource.setCurrentTimeMillis(5000);
         assertEquals("A", breaker.tryGet(() -> "A", () -> "B"));
-        assertEquals(Breaker.State.ALIVE, breaker.getState());
+        assertEquals(State.ALIVE, breaker.getState());
     }
 
     private void wasInvoked() {

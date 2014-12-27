@@ -8,7 +8,26 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    asciidoclet
+}
+
 dependencies {
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-all:1.9.5'
+    asciidoclet 'org.asciidoctor:asciidoclet:1.+'
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    testCompile 'org.slf4j:slf4j-simple:1.7.7'
+}
+
+javadoc {
+    options.docletpath = configurations.asciidoclet.files.asType(List)
+    options.doclet = 'org.asciidoctor.Asciidoclet'
+    options.overview = "src/main/java/overview.adoc"
+    options.addStringOption "-base-dir", "${projectDir}"
+    options.addStringOption "-attribute",
+            "projectDir=${projectDir}," +
+            "name=${project.name}," +
+            "version=${project.version}," +
+            "title-link=http://example.com[${project.name} ${project.version}]"
 }

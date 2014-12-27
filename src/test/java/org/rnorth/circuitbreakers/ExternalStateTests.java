@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
@@ -26,14 +28,14 @@ public class ExternalStateTests {
                 .storeStateIn(mockStateStore)
                 .build();
 
-        when(mockStateStore.getState()).thenReturn(Breaker.State.ALIVE);
+        when(mockStateStore.getState()).thenReturn(State.ALIVE);
         assertEquals("called", breaker.tryGet(() -> "called").get());
 
-        when(mockStateStore.getState()).thenReturn(Breaker.State.BROKEN);
+        when(mockStateStore.getState()).thenReturn(State.BROKEN);
         when(mockStateStore.getLastFailure()).thenReturn(10L);
         assertEquals("not called", breaker.tryGet(() -> "called", () -> "not called"));
 
-        when(mockStateStore.getState()).thenReturn(Breaker.State.BROKEN);
+        when(mockStateStore.getState()).thenReturn(State.BROKEN);
         when(mockStateStore.getLastFailure()).thenReturn(9L);
         assertEquals("called", breaker.tryGet(() -> "called").get());
 
@@ -46,13 +48,13 @@ public class ExternalStateTests {
 
         MapBackedStateStore store = new MapBackedStateStore(map, "TEST");
 
-        assertEquals(Breaker.State.ALIVE, store.getState()); // initial state
+        assertEquals(State.ALIVE, store.getState()); // initial state
 
-        store.setState(Breaker.State.BROKEN);
-        assertEquals(Breaker.State.BROKEN, store.getState());
+        store.setState(State.BROKEN);
+        assertEquals(State.BROKEN, store.getState());
 
-        store.setState(Breaker.State.ALIVE);
-        assertEquals(Breaker.State.ALIVE, store.getState());
+        store.setState(State.ALIVE);
+        assertEquals(State.ALIVE, store.getState());
 
         store.setLastFailure(666L);
         assertEquals(666L, store.getLastFailure());
@@ -60,15 +62,15 @@ public class ExternalStateTests {
         MapBackedStateStore otherStoreUsingSameMap = new MapBackedStateStore(map, "ANOTHERPREFIX");
         store.setLastFailure(444L);
         assertNotEquals(444L, otherStoreUsingSameMap.getLastFailure());
-        otherStoreUsingSameMap.setState(Breaker.State.ALIVE);
-        store.setState(Breaker.State.BROKEN);
-        assertNotEquals(Breaker.State.BROKEN, otherStoreUsingSameMap.getState());
+        otherStoreUsingSameMap.setState(State.ALIVE);
+        store.setState(State.BROKEN);
+        assertNotEquals(State.BROKEN, otherStoreUsingSameMap.getState());
     }
 
     @Test
     public void testBuilderUsingMapBackedStore() {
 
-        Map<String, Object> map = new HashMap<>();
+        ConcurrentMap<String, Object> map = new ConcurrentHashMap<>();
 
         Breaker breaker = BreakerBuilder.newBuilder()
                         .storeStateIn(map, "PREFIX")

@@ -8,14 +8,14 @@ import java.util.function.Supplier;
 /**
  * @author richardnorth
  */
-public class LocalBreaker implements Breaker {
+class DefaultBreaker implements Breaker {
 
     private final TimeSource timeSource;
     private final long autoResetInterval;
     private final TimeUnit autoResetUnit;
     private final StateStore stateStore;
 
-    LocalBreaker(TimeSource timeSource, long autoResetInterval, TimeUnit autoResetUnit, StateStore stateStore) {
+    DefaultBreaker(TimeSource timeSource, long autoResetInterval, TimeUnit autoResetUnit, StateStore stateStore) {
 
         this.timeSource = timeSource;
         this.autoResetInterval = autoResetInterval;

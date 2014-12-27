@@ -3,17 +3,17 @@ package org.rnorth.circuitbreakers;
 /**
  * @author richardnorth
  */
-public class SimpleStateStore implements StateStore {
-    private Breaker.State state = Breaker.State.ALIVE;
+class SimpleStateStore implements StateStore {
+    private State state = State.ALIVE;
     private long lastFailure;
 
     @Override
-    public Breaker.State getState() {
+    public State getState() {
         return state;
     }
 
     @Override
-    public void setState(Breaker.State state) {
+    public void setState(State state) {
         this.state = state;
     }
 
