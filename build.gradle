@@ -3,6 +3,7 @@ apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 version = '1.0'
+group = 'org.rnorth.circuitbreakers'
 
 repositories {
     mavenCentral()
@@ -34,14 +35,18 @@ javadoc {
 
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
 
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
     }
 }
 
@@ -49,5 +54,41 @@ jacocoTestReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+bintray {
+    user = bintray_user //this usually comes from gradle.properties file in ~/.gradle
+    key = bintray_api_key //this usually comes from gradle.properties file in ~/.gradle
+    publications = ['mavenJava']
+
+    pkg {
+        repo = 'maven'
+        name = 'circuitbreakers'
+        desc = 'Circuit Breakers pattern implementation for Java 8'
+        websiteUrl = 'https://github.com/rnorth/circuitbreakers'
+        issueTrackerUrl = 'https://github.com/rnorth/circuitbreakers/issues'
+        vcsUrl = 'https://github.com/rnorth/circuitbreakers.git'
+        licenses = ['MIT']
     }
 }
