@@ -16,7 +16,7 @@ class MapBackedStateStore implements StateStore {
 
     @Override
     public State getState() {
-        return (State) this.map.getOrDefault(keyPrefix + "_STATE", State.ALIVE);
+        return (State) this.map.getOrDefault(keyPrefix + "_STATE", State.OK);
     }
 
     @Override

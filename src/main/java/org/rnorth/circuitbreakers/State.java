@@ -5,9 +5,9 @@ package org.rnorth.circuitbreakers;
 */
 public enum State {
     /**
-     * The breaker is alive, i.e. trying to perform requested primary actions.
+     * The breaker is OK, i.e. trying to perform requested primary actions.
      */
-    ALIVE,
+    OK,
     /**
      * The breaker is broken, i.e. avoiding calling primary actions, and falling straight through to the fallback actions.
      */

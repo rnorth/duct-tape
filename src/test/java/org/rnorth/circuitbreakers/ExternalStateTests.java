@@ -28,7 +28,7 @@ public class ExternalStateTests {
                 .storeStateIn(mockStateStore)
                 .build();
 
-        when(mockStateStore.getState()).thenReturn(State.ALIVE);
+        when(mockStateStore.getState()).thenReturn(State.OK);
         assertEquals("called", breaker.tryGet(() -> "called").get());
 
         when(mockStateStore.getState()).thenReturn(State.BROKEN);
@@ -48,13 +48,13 @@ public class ExternalStateTests {
 
         MapBackedStateStore store = new MapBackedStateStore(map, "TEST");
 
-        assertEquals(State.ALIVE, store.getState()); // initial state
+        assertEquals(State.OK, store.getState()); // initial state
 
         store.setState(State.BROKEN);
         assertEquals(State.BROKEN, store.getState());
 
-        store.setState(State.ALIVE);
-        assertEquals(State.ALIVE, store.getState());
+        store.setState(State.OK);
+        assertEquals(State.OK, store.getState());
 
         store.setLastFailure(666L);
         assertEquals(666L, store.getLastFailure());
@@ -62,7 +62,7 @@ public class ExternalStateTests {
         MapBackedStateStore otherStoreUsingSameMap = new MapBackedStateStore(map, "ANOTHERPREFIX");
         store.setLastFailure(444L);
         assertNotEquals(444L, otherStoreUsingSameMap.getLastFailure());
-        otherStoreUsingSameMap.setState(State.ALIVE);
+        otherStoreUsingSameMap.setState(State.OK);
         store.setState(State.BROKEN);
         assertNotEquals(State.BROKEN, otherStoreUsingSameMap.getState());
     }

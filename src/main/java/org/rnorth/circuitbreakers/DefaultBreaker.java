@@ -30,7 +30,7 @@ class DefaultBreaker implements Breaker {
         } else {
             try {
                 tryIfAlive.run();
-                setState(State.ALIVE);
+                setState(State.OK);
             } catch (Exception e) {
                 setState(State.BROKEN);
                 setLastFailure(timeSource.getTimeMillis());
@@ -57,7 +57,7 @@ class DefaultBreaker implements Breaker {
         } else {
             try {
                 T callResult = tryIfAlive.call();
-                setState(State.ALIVE);
+                setState(State.OK);
                 return callResult;
             } catch (Exception e) {
                 setState(State.BROKEN);

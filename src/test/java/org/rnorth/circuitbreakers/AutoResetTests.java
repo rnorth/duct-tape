@@ -31,7 +31,7 @@ public class AutoResetTests {
                 .build();
 
         // Simulate a failure
-        assertEquals(State.ALIVE, breaker.getState());
+        assertEquals(State.OK, breaker.getState());
         breaker.tryDo(() -> {
             throw new RuntimeException();
         });
@@ -47,7 +47,7 @@ public class AutoResetTests {
 
         dummyTimeSource.setCurrentTimeMillis(5000);
         breaker.tryDo(this::wasInvoked, () -> fail("Should not be invoked"));
-        assertEquals(State.ALIVE, breaker.getState());
+        assertEquals(State.OK, breaker.getState());
         assertTrue(invoked);
     }
 
@@ -61,7 +61,7 @@ public class AutoResetTests {
                 .build();
 
         // Simulate a failure
-        assertEquals(State.ALIVE, breaker.getState());
+        assertEquals(State.OK, breaker.getState());
         breaker.tryGet(() -> {
             throw new RuntimeException();
         });
@@ -77,7 +77,7 @@ public class AutoResetTests {
 
         dummyTimeSource.setCurrentTimeMillis(5000);
         assertEquals("A", breaker.tryGet(() -> "A", () -> "B"));
-        assertEquals(State.ALIVE, breaker.getState());
+        assertEquals(State.OK, breaker.getState());
     }
 
     private void wasInvoked() {

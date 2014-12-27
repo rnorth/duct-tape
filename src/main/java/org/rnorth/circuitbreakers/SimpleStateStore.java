@@ -4,7 +4,7 @@ package org.rnorth.circuitbreakers;
  * @author richardnorth
  */
 class SimpleStateStore implements StateStore {
-    private State state = State.ALIVE;
+    private State state = State.OK;
     private long lastFailure;
 
     @Override
