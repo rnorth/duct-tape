@@ -1,4 +1,4 @@
-= Circuit Breakers image:https://api.travis-ci.org/rnorth/circuitbreakers.svg?branch=master["Build Status", link="https://travis-ci.org/rnorth/circuitbreakers"]
+= Circuit Breakers image:https://api.travis-ci.org/rnorth/circuitbreakers.svg?branch=master["Build Status", link="https://travis-ci.org/rnorth/circuitbreakers"] image:https://img.shields.io/coveralls/rnorth/circuitbreakers.svg["Coverage", "https://coveralls.io/r/rnorth/circuitbreakers?branch=master"]
 
 Circuit Breakers is a little Java library providing an implementation of the
 http://martinfowler.com/bliki/CircuitBreaker.html[Circuit Breaker pattern].
