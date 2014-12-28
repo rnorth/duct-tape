@@ -1,8 +1,12 @@
 #!/bin/sh
 
-rm -rf docs/*
+set -x
+set -e
 
 ./gradlew javadoc
+rm -rf docs/javadoc
 cp -R build/docs/javadoc docs/javadoc
 
-asciidoctor README.adoc -o docs/index.html
+pushd docs
+asciidoctor *.adoc
+popd

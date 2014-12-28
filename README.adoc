@@ -86,4 +86,9 @@ dependencies {
 
 == Javadocs
 
+ifdef::env-github[]
 See http://rnorth.github.io/circuitbreakers/javadoc/[the latest Javadocs here].
+endif::[]
+ifndef::env-github[]
+See link:javadoc/index.html[the latest Javadocs here].
+endif::[]
