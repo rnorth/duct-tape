@@ -37,6 +37,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
+apply plugin: 'org.asciidoctor.convert'
 
 buildscript {
     repositories {
@@ -47,6 +48,7 @@ buildscript {
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
     }
 }
 
@@ -92,3 +94,12 @@ bintray {
         licenses = ['MIT']
     }
 }
+
+asciidoctor {
+    sourceDir projectDir
+    sources {
+        include '**/*.adoc'
+    }
+    outputDir new File("${projectDir}/docs")
+}
+tasks.asciidoctor.dependsOn(javadoc)

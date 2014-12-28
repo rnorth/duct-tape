@@ -42,3 +42,36 @@ be called on subsequent invocations as long as the breaker remains in the OK sta
 
 If <1> throws an exception, <2> and <3> will be called immediately, and the breaker will change into
 the BROKEN state. Thereafter, every time this code is hit <3> will be called.
+
+== Setting up as a dependency
+
+Circuitbreakers is currently in the JCenter maven repository. It can be used in Maven or Gradle projects.
+
+=== Maven
+
+    <repository>
+        <id>jcenter</id>
+        <name>bintray</name>
+        <url>http://jcenter.bintray.com</url>
+    </repository>
+
+    <dependency>
+        <groupId>org.rnorth.circuitbreakers</groupId>
+        <artifactId>circuitbreakers</artifactId>
+        <version>1.0</version>
+        <type>jar</type>
+    </dependency>
+
+== Gradle
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        compile 'org.rnorth.circuitbreakers:circuitbreakers:1.0'
+    }
+
+== Javadocs
+
+See http://rnorth.github.io/circuitbreakers/javadoc/[the latest Javadocs here].
