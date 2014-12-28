@@ -1,6 +1,6 @@
 = Circuit Breakers
 
-:latestVersion: 1.0
+:latestVersion: 1.0.1
 
 image:https://api.travis-ci.org/rnorth/circuitbreakers.svg?branch=master["Build Status", link="https://travis-ci.org/rnorth/circuitbreakers"] image:https://img.shields.io/coveralls/rnorth/circuitbreakers.svg["Coverage", "https://coveralls.io/r/rnorth/circuitbreakers?branch=master"] image:https://api.bintray.com/packages/richnorth/maven/circuitbreakers/images/download.svg[link="https://bintray.com/richnorth/maven/circuitbreakers/_latestVersion"] image:http://img.shields.io/badge/license-MIT-blue.svg?style=flat[link="http://www.opensource.org/licenses/MIT"]
 
