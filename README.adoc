@@ -1,5 +1,7 @@
 = Circuit Breakers
 
+:latestVersion: 1.0
+
 image:https://api.travis-ci.org/rnorth/circuitbreakers.svg?branch=master["Build Status", link="https://travis-ci.org/rnorth/circuitbreakers"] image:https://img.shields.io/coveralls/rnorth/circuitbreakers.svg["Coverage", "https://coveralls.io/r/rnorth/circuitbreakers?branch=master"] image:https://api.bintray.com/packages/richnorth/maven/circuitbreakers/images/download.svg[link="https://bintray.com/richnorth/maven/circuitbreakers/_latestVersion"]
 
 Circuit Breakers is a little Java library providing an implementation of the
@@ -49,28 +51,38 @@ Circuitbreakers is currently in the JCenter maven repository. It can be used in 
 
 === Maven
 
+[source,xml,subs="attributes,verbatim"]
+--
+<repositories>
     <repository>
         <id>jcenter</id>
         <name>bintray</name>
         <url>http://jcenter.bintray.com</url>
     </repository>
-
+</repositories>
+...
+<dependencies>
     <dependency>
         <groupId>org.rnorth.circuitbreakers</groupId>
         <artifactId>circuitbreakers</artifactId>
-        <version>1.0</version>
+        <version>{latestVersion}</version>
         <type>jar</type>
     </dependency>
+</dependencies>
+--
 
 == Gradle
 
-    repositories {
-        jcenter()
-    }
+[source,groovy,subs="attributes,verbatim"]
+--
+repositories {
+    jcenter()
+}
 
-    dependencies {
-        compile 'org.rnorth.circuitbreakers:circuitbreakers:1.0'
-    }
+dependencies {
+    compile 'org.rnorth.circuitbreakers:circuitbreakers:{latestVersion}'
+}
+--
 
 == Javadocs
 
