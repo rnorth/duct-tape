@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- http://findbugs.sourceforge.net/manual/filter.html -->
+<FindBugsFilter>
+    <!--<Match>
+        <Class name="full.class.name"/>
+        <Bug pattern="CHECK_PATTERN"/>
+    </Match>-->
+</FindBugsFilter>

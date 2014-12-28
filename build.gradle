@@ -1,105 +1,107 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-
-sourceCompatibility = 1.8
-version = '1.0'
-group = 'org.rnorth.circuitbreakers'
-
-repositories {
-    mavenCentral()
-}
-
-configurations {
-    asciidoclet
-}
-
-dependencies {
-    testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-all:1.9.5'
-    asciidoclet 'org.asciidoctor:asciidoclet:1.+'
-    compile 'org.slf4j:slf4j-api:1.7.7'
-    testCompile 'org.slf4j:slf4j-simple:1.7.7'
-}
-
-javadoc {
-    options.docletpath = configurations.asciidoclet.files.asType(List)
-    options.doclet = 'org.asciidoctor.Asciidoclet'
-    options.overview = "src/main/java/overview.adoc"
-    options.addStringOption "-base-dir", "${projectDir}"
-    options.addStringOption "-attribute",
-            "projectDir=${projectDir}," +
-            "name=${project.name}," +
-            "version=${project.version}," +
-            "title-link=http://example.com[${project.name} ${project.version}]"
-}
-
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven-publish'
-apply plugin: 'org.asciidoctor.convert'
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import java.awt.*
 
 buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
+    apply from: "gradle/buildscript.gradle", to: buildscript
+}
+
+group = 'org.rnorth.circuitbreakers'
+description = 'Circuit Breakers pattern implementation for Java 8'
+
+// convention: project.name == github project name == bintray package page
+project.ext {
+    build = {
+        gradle = '2.2.1'
+        java = 1.8
+        // if not empty runs animal sniffer on compile to guarantee binary compatibility; set '' to disable
+        //        signature = 'org.codehaus.mojo.signature:java16-sun:+@signature'
+        signature = ''
     }
-
-    dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+    github = {
+        user = 'rnorth'
     }
-}
+    bintray = {
+        user = project.hasProperty('bintrayUser') ? bintrayUser : 'USER' // configured in ~/.gradle/gradle.properties
+        key = project.hasProperty('bintrayKey') ? bintrayKey : 'KEY' // configured in ~/.gradle/gradle.properties
+        repo = 'maven'
+        tags = []
+        dryRun = false // whether to run this as dry-run, without deploying (TEST RUN)
+        publish = true //If version should be auto published after an upload
 
-jacocoTestReport {
-    reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
-        html.enabled = true
+        signFiles = true // true to gpg sign files on bintray (certificate must be installed on bintray account)
+        gpgPassphrase = project.hasProperty('gpgPassphrase') ? gpgPassphrase : '' // optionally configured in ~/.gradle/gradle.properties if certificate requires it
+
+        mavenCentralSync = true // true to sync with maven central (files signing required)
+        ossUser = project.hasProperty('sonatypeUser') ? sonatypeUser : 'USER' // configured in ~/.gradle/gradle.properties
+        ossPassword = project.hasProperty('sonatypePassword') ? sonatypePassword : 'PASSWORD' // configured in ~/.gradle/gradle.properties
     }
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
+    license = 'MIT'
+    licenseDesc = 'The MIT License'
+    // extend pom for maven central acceptance
+    pomConfig = {
+        scm {
+            url github.scm
+            connection github.scmConnection
+            developerConnection github.scmConnection
+        }
+        licenses {
+            license {
+                name licenseDesc
+                url github.licenseUrl
+                distribution "repo"
+            }
+        }
+        developers {
+            developer {
+                id "rnorth"
+                name "Richard North"
+                email "rich.north@gmail.com"
+            }
         }
     }
 }
 
-bintray {
-    user = project.hasProperty('bintray_user') ? project.bintray_user : ''
-    key = project.hasProperty('bintray_api_key') ? project.bintray_api_key : ''
-    publications = ['mavenJava']
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'project-report'
 
-    pkg {
-        repo = 'maven'
-        name = 'circuitbreakers'
-        desc = 'Circuit Breakers pattern implementation for Java 8'
-        websiteUrl = 'https://github.com/rnorth/circuitbreakers'
-        issueTrackerUrl = 'https://github.com/rnorth/circuitbreakers/issues'
-        vcsUrl = 'https://github.com/rnorth/circuitbreakers.git'
-        licenses = ['MIT']
-    }
+apply from: 'gradle/build.gradle'
+apply from: 'gradle/github.gradle'
+apply from: 'gradle/bintray.gradle'
+apply from: 'gradle/release.gradle'
+apply from: 'gradle/maven.gradle'
+apply from: 'gradle/quality.gradle'
+apply from: 'gradle/asciidoclet.gradle'
+
+
+repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
 }
 
-asciidoctor {
-    sourceDir projectDir
-    sources {
-        include '**/*.adoc'
-    }
-    outputDir new File("${projectDir}/docs")
+dependencies {
+    provided 'com.google.code.findbugs:jsr305:3.0.0'
+
+    compile 'org.slf4j:slf4j-api:1.7.7'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.slf4j:slf4j-simple:1.7.7'
 }
-tasks.asciidoctor.dependsOn(javadoc)
+
+task checkOutOfDate(type: DependencyUpdatesTask, description: 'Checks dependencies updates availability') {
+    revision 'release'
+}
+
+task showDependenciesTree(dependsOn: 'htmlDependencyReport', description:
+        'Generates dependencies tree report and opens it in browser (useful to analyze dependencies)') << {
+    Desktop.getDesktop().open(file('/build/reports/project/dependencies/root.html'))
+}
+
+task install(dependsOn: 'publishMavenJavaPublicationToMavenLocal', description: 'Install to local maven repository') << {
+    logger.warn "INSTALLED $project.group:$project.name:$project.version"
+}
+
