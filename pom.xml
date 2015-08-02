@@ -4,7 +4,7 @@
 
     <groupId>org.rnorth.circuitbreakers</groupId>
     <artifactId>circuitbreakers</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
 
 
 
@@ -103,7 +103,7 @@
         <connection>scm:git:https://github.com/rnorth/${project.artifactId}.git</connection>
         <developerConnection>scm:git:git@github.com:rnorth/${project.artifactId}.git</developerConnection>
         <url>https://github.com/rnorth/${project.artifactId}</url>
-        <tag>circuitbreakers-1.0.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
