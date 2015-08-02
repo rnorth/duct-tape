@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author richardnorth
  */
-public class SimpleBreakerTests {
+public class SimpleBreakerTest {
 
     private List<Call> doCalls;
 

@@ -1,4 +1,0 @@
-[submodule "docs"]
-	path = docs
-    url=https://github.com/rnorth/circuitbreakers.git
-	branch = gh-pages

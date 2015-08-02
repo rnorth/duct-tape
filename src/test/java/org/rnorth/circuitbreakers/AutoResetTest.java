@@ -12,7 +12,7 @@ import static org.junit.Assert.fail;
 /**
  * @author richardnorth
  */
-public class AutoResetTests {
+public class AutoResetTest {
 
     private boolean invoked;
 

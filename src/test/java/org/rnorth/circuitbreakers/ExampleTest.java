@@ -14,9 +14,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author richardnorth
  */
-public class ExampleTests {
+public class ExampleTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleTests.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleTest.class);
 
     @Test
     public void exampleUsage() {

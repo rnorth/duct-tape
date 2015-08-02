@@ -4,34 +4,16 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * = BreakerBuilder
+ * BreakerBuilder
  *
  * A builder of {@link org.rnorth.circuitbreakers.Breaker} instances having any combination of the following features:
- *
- * * automatic reset after a configured period of time has passed since the last failure
- * * configurable state storage, for example for use with a distributed map implementation
- *
+ * <ul>
+ * <li>automatic reset after a configured period of time has passed since the last failure</li>
+ * <li>configurable state storage, for example for use with a distributed map implementation</li>
+ * </ul>
  * These features are optional; by default instances will be created with none of them.
  *
- * [source,java]
- * .Simple uncustomized usage
- * --
- * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleSimpleBuild,indent=0]
- * --
- *
- * [source,java]
- * .Building a breaker which automatically resets after a period of time since the last failure
- * --
- * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleAutoResetBuild,indent=0]
- * --
- *
- * [source,java]
- * .Building a breaker which stores its state in an external map
- * --
- * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleExternalStoreBuild,indent=0]
- * --
- *
- * @author https://github.com/rnorth[Richard North]
+ * @author richardnorth
  */
 public class BreakerBuilder {
 
@@ -62,6 +44,10 @@ public class BreakerBuilder {
     /**
      * Use a {@link org.rnorth.circuitbreakers.TimeSource} instance to track time elapsed since last failure.
      * Mainly intended for use in testing.
+     *
+     * @param timeSource a time source instance to track time elapsed since last failure.
+     *
+     * @return this
      */
     public BreakerBuilder timeSource(TimeSource timeSource) {
         this.timeSource = timeSource;
@@ -72,11 +58,13 @@ public class BreakerBuilder {
      * Configure the breaker to automatically reset a given time after a failure has occurred. Use this for
      * unattended retry behaviour.
      *
-     * If this method is _not_ used, the default is for the breaker to wait `Long.MAX_VALUE` days before it
+     * If this method is <i>not</i> used, the default is for the breaker to wait `Long.MAX_VALUE` days before it
      * resets automatically, i.e. effectively forever.
      *
      * @param autoResetInterval the interval length
      * @param autoResetUnit     the units of the interval
+     *
+     * @return this
      */
     public BreakerBuilder autoResetAfter(long autoResetInterval, TimeUnit autoResetUnit) {
         this.autoResetInterval = autoResetInterval;
@@ -85,14 +73,16 @@ public class BreakerBuilder {
     }
 
     /**
-     * Configure the breaker to use the provided {@link java.util.Map} to store its state. The `keyPrefix` is used to
+     * Configure the breaker to use the provided {@link java.util.Map} to store its state. The <pre>keyPrefix</pre> is used to
      * uniquely identify the breaker's entries in the map.
      *
-     * `keyPrefix` should be unique; behaviour is undefined if it is not. Additionally, behaviour is undefined if entries
+     * <pre>keyPrefix</pre> should be unique; behaviour is undefined if it is not. Additionally, behaviour is undefined if entries
      * are directly modified.
      *
      * @param map       the map to use for storage
      * @param keyPrefix a unique prefix for the +Breaker+'s entries in the map
+     *
+     * @return this
      */
     public BreakerBuilder storeStateIn(ConcurrentMap<String, Object> map, String keyPrefix) {
         this.stateStore = new MapBackedStateStore(map, keyPrefix);
@@ -103,6 +93,8 @@ public class BreakerBuilder {
      * Configure the breaker to use the provided {@link org.rnorth.circuitbreakers.StateStore} to store its state.
      *
      * @param stateStore       an instance of {@link org.rnorth.circuitbreakers.StateStore} to store state in
+     *
+     * @return this
      */
     public BreakerBuilder storeStateIn(StateStore stateStore) {
         this.stateStore = stateStore;

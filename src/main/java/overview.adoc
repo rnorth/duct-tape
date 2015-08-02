@@ -1,3 +1,0 @@
-= Circuit Breakers
-
-A small, configurable implementation of the Circuit Breakers pattern for Java.

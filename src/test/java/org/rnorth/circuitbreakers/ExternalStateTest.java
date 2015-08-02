@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author richardnorth
  */
-public class ExternalStateTests {
+public class ExternalStateTest {
 
     @Test
     public void testUseOfStateStore() {

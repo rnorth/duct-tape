@@ -14,12 +14,6 @@ public interface Breaker {
     /**
      * Do something, unless the breaker is in a broken state, in which case perform a fallback action.
      *
-     * == Example
-     * [source,java]
-     * --
-     * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleDoFailFallback,indent=0]
-     * --
-     *
      * @param tryIfAlive            A runnable, to be invoked unless the breaker is in `BROKEN` state
      * @param runOnFirstFailure     A runnable, to be invoked immediately if the first runnable fails
      * @param runIfBroken           A runnable, to be invoked if the breaker is in `BROKEN` state
@@ -29,12 +23,6 @@ public interface Breaker {
     /**
      * Do something, unless the breaker is in a broken state, in which case perform a fallback action.
      *
-     * == Example
-     * [source,java]
-     * --
-     * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleDoFallback,indent=0]
-     * --
-     *
      * @param tryIfAlive            A runnable, to be invoked unless the breaker is in `BROKEN` state
      * @param runIfBroken           A runnable, to be invoked if the breaker is in `BROKEN` state
      */
@@ -43,24 +31,12 @@ public interface Breaker {
     /**
      * Do something, unless the breaker is in a broken state, in which case do nothing.
      *
-     * == Example
-     * [source,java]
-     * --
-     * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleDo,indent=0]
-     * --
-     *
      * @param tryIfAlive            A runnable, to be invoked unless the breaker is in `BROKEN` state
      */
     void tryDo(Runnable tryIfAlive);
 
     /**
      * Get the result of something, unless the breaker is in a broken state, in which case get a fallback value.
-     *
-     * == Example
-     * [source,java]
-     * --
-     * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleGetFailFallback,indent=0]
-     * --
      *
      * @param tryIfAlive            A callable, to be called unless the breaker is in `BROKEN` state. May throw a checked exception.
      * @param runOnFirstFailure     A runnable, to be invoked immediately if the first callable fails
@@ -73,12 +49,6 @@ public interface Breaker {
     /**
      * Get the result of something, unless the breaker is in a broken state, in which case get a fallback value.
      *
-     * == Example
-     * [source,java]
-     * --
-     * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleGetFallback,indent=0]
-     * --
-     *
      * @param tryIfAlive            A callable, to be called unless the breaker is in `BROKEN` state. May throw a checked exception.
      * @param getIfBroken           A supplier, to be invoked if the breaker is in `BROKEN` state. May not throw a checked exception.
      * @param <T>                   The type to be returned by the `tryIfAlive` callable and `getIfBroken` supplier
@@ -88,12 +58,6 @@ public interface Breaker {
 
     /**
      * Get the result of something, unless the breaker is in a broken state, in which case get a fallback value.
-     *
-     * == Example
-     * [source,java]
-     * --
-     * include::{projectDir}/src/test/java/org/rnorth/circuitbreakers/ExampleTests.java[tags=ExampleGet,indent=0]
-     * --
      *
      * @param tryIfAlive            A callable, to be called unless the breaker is in `BROKEN` state. May throw a checked exception.
      * @param <T>                   The type to be returned by the `tryIfAlive` callable and `getIfBroken` supplier
