@@ -2,7 +2,23 @@
 
 > Circuit Breakers is a little Java 8 library providing an implementation of the [Circuit Breaker pattern](http://martinfowler.com/bliki/CircuitBreaker.html).
 
+[![Circle CI](https://circleci.com/gh/rnorth/circuitbreakers.svg?style=svg)](https://circleci.com/gh/rnorth/circuitbreakers)
+
 ## Table of Contents
+
+<!-- MarkdownTOC autolink=true bracket=round depth=3 -->
+
+- [Use Case](#use-case)
+- [Usage summary](#usage-summary)
+    - [Example](#example)
+- [Features/TODOs](#featurestodos)
+- [Maven dependency](#maven-dependency)
+- [License](#license)
+- [Contributing](#contributing)
+- [Copyright](#copyright)
+
+<!-- /MarkdownTOC -->
+
 
 ## Use Case
 
