@@ -70,22 +70,11 @@ the BROKEN state. Thereafter, every time this code is hit <3> will be called.
 
 ## Maven dependency
 
-Circuitbreakers is currently in the JCenter maven repository. It can be used in Maven or Gradle projects.
-
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <name>bintray</name>
-            <url>http://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
-    ...
     <dependencies>
         <dependency>
             <groupId>org.rnorth.circuitbreakers</groupId>
             <artifactId>circuitbreakers</artifactId>
-            <version>{latestVersion}</version>
-            <type>jar</type>
+            <version>1.0.2</version>
         </dependency>
     </dependencies>
 
