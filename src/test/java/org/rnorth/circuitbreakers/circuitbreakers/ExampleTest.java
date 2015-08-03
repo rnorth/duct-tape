@@ -1,4 +1,4 @@
-package org.rnorth.circuitbreakers;
+package org.rnorth.circuitbreakers.circuitbreakers;
 
 import org.junit.Test;
 import org.slf4j.Logger;

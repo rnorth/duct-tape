@@ -1,4 +1,4 @@
-package org.rnorth.circuitbreakers;
+package org.rnorth.circuitbreakers.circuitbreakers;
 
 /**
  * @author richardnorth
@@ -9,7 +9,7 @@ class TimeSource {
         return System.currentTimeMillis();
     }
 
-    static class DummyTimeSource extends TimeSource {
+    static class DummyTimeSource extends org.rnorth.circuitbreakers.circuitbreakers.TimeSource {
 
         private long currentTimeMillis = 0L;
 

@@ -1,4 +1,4 @@
-package org.rnorth.circuitbreakers;
+package org.rnorth.circuitbreakers.circuitbreakers;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;

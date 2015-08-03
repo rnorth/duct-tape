@@ -1,7 +1,7 @@
-package org.rnorth.circuitbreakers;
+package org.rnorth.circuitbreakers.circuitbreakers;
 
 /**
- * An external store for state which a {@link org.rnorth.circuitbreakers.Breaker} can use.
+ * An external store for state which a {@link Breaker} can use.
  *
  * While a default instance of Breaker will use a simple object local to the current JVM, alternative instances of `StateStore`
  * could be created to maintain state somewhere else, e.g.:

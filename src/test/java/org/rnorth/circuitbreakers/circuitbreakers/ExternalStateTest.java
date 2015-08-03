@@ -1,4 +1,4 @@
-package org.rnorth.circuitbreakers;
+package org.rnorth.circuitbreakers.circuitbreakers;
 
 import org.junit.Test;
 
@@ -8,9 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.*;
+import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
+import static org.rnorth.visibleassertions.VisibleAssertions.assertNotEquals;
 
 /**
  * @author richardnorth
@@ -29,15 +29,15 @@ public class ExternalStateTest {
                 .build();
 
         when(mockStateStore.getState()).thenReturn(State.OK);
-        assertEquals("called", breaker.tryGet(() -> "called").get());
+        assertEquals("When the state store reports state is OK, the first supplier is called", "called", breaker.tryGet(() -> "called").get());
 
         when(mockStateStore.getState()).thenReturn(State.BROKEN);
         when(mockStateStore.getLastFailure()).thenReturn(10L);
-        assertEquals("not called", breaker.tryGet(() -> "called", () -> "not called"));
+        assertEquals("When the state store reports state is BROKEN, the fallback supplier is called", "not called", breaker.tryGet(() -> "called", () -> "not called"));
 
         when(mockStateStore.getState()).thenReturn(State.BROKEN);
         when(mockStateStore.getLastFailure()).thenReturn(9L);
-        assertEquals("called", breaker.tryGet(() -> "called").get());
+        assertEquals("When the state store reports state is BROKEN but expired, the first supplier is called", "called", breaker.tryGet(() -> "called").get());
 
         verify(mockStateStore);
     }
@@ -48,23 +48,23 @@ public class ExternalStateTest {
 
         MapBackedStateStore store = new MapBackedStateStore(map, "TEST");
 
-        assertEquals(State.OK, store.getState()); // initial state
+        assertEquals("The state store defaults to OK", State.OK, store.getState()); // initial state
 
         store.setState(State.BROKEN);
-        assertEquals(State.BROKEN, store.getState());
+        assertEquals("The state store can be set to BROKEN", State.BROKEN, store.getState());
 
         store.setState(State.OK);
-        assertEquals(State.OK, store.getState());
+        assertEquals("The state store can be set to OK", State.OK, store.getState());
 
         store.setLastFailure(666L);
-        assertEquals(666L, store.getLastFailure());
+        assertEquals("The state store last failure time can be set", 666L, store.getLastFailure());
 
         MapBackedStateStore otherStoreUsingSameMap = new MapBackedStateStore(map, "ANOTHERPREFIX");
         store.setLastFailure(444L);
-        assertNotEquals(444L, otherStoreUsingSameMap.getLastFailure());
+        assertNotEquals("The state store can hold more than one last failure time", 444L, otherStoreUsingSameMap.getLastFailure());
         otherStoreUsingSameMap.setState(State.OK);
         store.setState(State.BROKEN);
-        assertNotEquals(State.BROKEN, otherStoreUsingSameMap.getState());
+        assertNotEquals("The state store stores a separate state for each breaker prefix", State.BROKEN, otherStoreUsingSameMap.getState());
     }
 
     @Test
@@ -76,10 +76,10 @@ public class ExternalStateTest {
                         .storeStateIn(map, "PREFIX")
                         .build();
 
-        assertEquals(0, map.size());
+        assertEquals("The state store is not used before the breaker is called", 0, map.size());
 
         breaker.tryDo(() -> { throw new RuntimeException(); });
 
-        assertEquals(2, map.size());
+        assertEquals("The state store is used when the breaker is called", 2, map.size());
     }
 }

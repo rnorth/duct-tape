@@ -1,4 +1,4 @@
-package org.rnorth.circuitbreakers;
+package org.rnorth.circuitbreakers.circuitbreakers;
 
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * BreakerBuilder
  *
- * A builder of {@link org.rnorth.circuitbreakers.Breaker} instances having any combination of the following features:
+ * A builder of {@link Breaker} instances having any combination of the following features:
  * <ul>
  * <li>automatic reset after a configured period of time has passed since the last failure</li>
  * <li>configurable state storage, for example for use with a distributed map implementation</li>
@@ -33,7 +33,7 @@ public class BreakerBuilder {
     }
 
     /**
-     * @return a {@link org.rnorth.circuitbreakers.Breaker} instance configured using settings passed in to this
+     * @return a {@link Breaker} instance configured using settings passed in to this
      * `BreakerBuilder`
      */
     public Breaker build() {
@@ -42,7 +42,7 @@ public class BreakerBuilder {
     }
 
     /**
-     * Use a {@link org.rnorth.circuitbreakers.TimeSource} instance to track time elapsed since last failure.
+     * Use a {@link TimeSource} instance to track time elapsed since last failure.
      * Mainly intended for use in testing.
      *
      * @param timeSource a time source instance to track time elapsed since last failure.
@@ -90,9 +90,9 @@ public class BreakerBuilder {
     }
 
     /**
-     * Configure the breaker to use the provided {@link org.rnorth.circuitbreakers.StateStore} to store its state.
+     * Configure the breaker to use the provided {@link StateStore} to store its state.
      *
-     * @param stateStore       an instance of {@link org.rnorth.circuitbreakers.StateStore} to store state in
+     * @param stateStore       an instance of {@link StateStore} to store state in
      *
      * @return this
      */
