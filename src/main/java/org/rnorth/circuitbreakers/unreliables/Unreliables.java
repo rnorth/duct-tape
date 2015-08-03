@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.*;
 
 /**
- * Utilities to support automatic retry of things that may tend to not always produce consistent results.
+ * Utilities to support automatic retry of things that may fail.
  */
 public abstract class Unreliables {
 
@@ -19,7 +19,7 @@ public abstract class Unreliables {
      * will be retried repeatedly until the timeout is hit.
      *
      * @param timeout  how long to wait
-     * @param timeUnit how long to wait (units)
+     * @param timeUnit time unit for time interval
      * @param lambda   supplier lambda expression (may throw checked exceptions)
      * @param <T>      return type of the supplier
      * @return the result of the successful lambda expression call
@@ -28,17 +28,14 @@ public abstract class Unreliables {
         final int[] attempt = {0};
         final Exception[] lastException = {null};
 
-        Future<T> retryThread = EXECUTOR_SERVICE.submit(new Callable<T>() {
-            @Override
-            public T call() throws Exception {
-                while (true) {
-                    try {
-                        return lambda.get();
-                    } catch (Exception e) {
-                        // Failed
-                        LOGGER.trace("Retrying lambda call on attempt {}", attempt[0]++);
-                        lastException[0] = e;
-                    }
+        Future<T> retryThread = EXECUTOR_SERVICE.submit(() -> {
+            while (true) {
+                try {
+                    return lambda.get();
+                } catch (Exception e) {
+                    // Failed
+                    LOGGER.trace("Retrying lambda call on attempt {}", attempt[0]++);
+                    lastException[0] = e;
                 }
             }
         });
@@ -60,7 +57,7 @@ public abstract class Unreliables {
      * will be retried repeatedly until the timeout is hit.
      *
      * @param timeout  how long to wait
-     * @param timeUnit how long to wait (units)
+     * @param timeUnit time unit for time interval
      * @param lambda   supplier lambda expression
      */
     public static void retryUntilTrue(final int timeout, final TimeUnit timeUnit, final Callable<Boolean> lambda) {
