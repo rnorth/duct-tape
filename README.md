@@ -1,6 +1,6 @@
 # Circuit Breakers
 
-> Circuit Breakers is a little Java 8 library providing an implementation of the [Circuit Breaker pattern](http://martinfowler.com/bliki/CircuitBreaker.html).
+> Circuit Breakers is a little Java 8 library providing an implementation of the [Circuit Breaker pattern](http://martinfowler.com/bliki/CircuitBreaker.html). It provides fault tolerant wrappers for code that calls external APIs and unreliable components.
 
 [![Circle CI](https://circleci.com/gh/rnorth/circuitbreakers.svg?style=svg)](https://circleci.com/gh/rnorth/circuitbreakers)
 
