@@ -23,7 +23,7 @@ public abstract class Unreliables {
      * @param <T>      return type of the supplier
      * @return the result of the successful lambda expression call
      */
-    public static <T> T retryUntilSuccess(final int timeout, final TimeUnit timeUnit, final UnreliableSupplier<T> lambda) {
+    public static <T> T retryUntilSuccess(final int timeout, final TimeUnit timeUnit, final Callable<T> lambda) {
         final int[] attempt = {0};
         final Exception[] lastException = {null};
 
@@ -31,7 +31,7 @@ public abstract class Unreliables {
             return Timeouts.withTimeout(timeout, timeUnit, () -> {
                 while (true) {
                     try {
-                        return lambda.get();
+                        return lambda.call();
                     } catch (Exception e) {
                         // Failed
                         LOGGER.trace("Retrying lambda call on attempt {}", attempt[0]++);

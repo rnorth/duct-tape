@@ -1,8 +1,8 @@
 package org.rnorth.circuitbreakers.inconsistents;
 
-import org.rnorth.circuitbreakers.unreliables.UnreliableSupplier;
 import org.rnorth.circuitbreakers.unreliables.Unreliables;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,7 +23,7 @@ public class Inconsistents {
      * @param <T> the return type of the UnreliableSupplier
      * @return the result of the supplier if it returned a consistent result for the specified interval
      */
-    public static <T> T retryUntilConsistent(int consistentTime, int totalTimeout, TimeUnit timeUnit, UnreliableSupplier<T> lambda) {
+    public static <T> T retryUntilConsistent(int consistentTime, int totalTimeout, TimeUnit timeUnit, Callable<T> lambda) {
 
         long start = System.currentTimeMillis();
 
@@ -35,7 +35,7 @@ public class Inconsistents {
         long consistentTimeInMillis = timeUnit.convert(consistentTime, TimeUnit.MILLISECONDS);
 
         return Unreliables.retryUntilSuccess(totalTimeout, timeUnit, () -> {
-            T value = lambda.get();
+            T value = lambda.call();
 
             boolean valueIsSame = value == recentValue[0] || (value != null && value.equals(recentValue[0]));
 

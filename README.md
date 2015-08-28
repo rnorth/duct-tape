@@ -126,7 +126,7 @@ Wait until a collection of UI elements has been fully updated by JavaScript code
 ## Why not Hystrix?
 
 [Hystrix](https://github.com/Netflix/Hystrix) is a leading Java fault tolerance library that is undoubtedly more mature,
- more battle-tested and probably more robust fault tolerance library.
+ more battle-tested and probably more robust.
 However, it is fairly prescriptive, and imposes a structure that might not fit with existing codebases. Circuitbreakers
 is intended to be very easy to understand and easy to integrate, with least disruption: integration should not be much
 harder than wrapping integration points.
@@ -140,7 +140,7 @@ consider Circuitbreakers :)
         <dependency>
             <groupId>org.rnorth.circuitbreakers</groupId>
             <artifactId>circuitbreakers</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
     </dependencies>
 
