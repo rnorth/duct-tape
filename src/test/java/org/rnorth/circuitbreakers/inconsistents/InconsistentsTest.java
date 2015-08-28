@@ -1,7 +1,7 @@
 package org.rnorth.circuitbreakers.inconsistents;
 
 import org.junit.Test;
-import org.rnorth.circuitbreakers.unreliables.TimeoutException;
+import org.rnorth.circuitbreakers.TimeoutException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,7 +9,7 @@ import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 
 /**
- * Created by rnorth on 23/07/2015.
+ * Tests for Inconsistents class.
  */
 public class InconsistentsTest {
 

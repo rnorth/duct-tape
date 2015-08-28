@@ -1,5 +1,6 @@
 package org.rnorth.circuitbreakers.unreliables;
 
+import org.rnorth.circuitbreakers.timeouts.Timeouts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,8 +12,6 @@ import java.util.concurrent.*;
 public abstract class Unreliables {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Unreliables.class);
-
-    public static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     /**
      * Call a supplier repeatedly until it returns a result. If an exception is thrown, the call
@@ -28,28 +27,25 @@ public abstract class Unreliables {
         final int[] attempt = {0};
         final Exception[] lastException = {null};
 
-        Future<T> retryThread = EXECUTOR_SERVICE.submit(() -> {
-            while (true) {
-                try {
-                    return lambda.get();
-                } catch (Exception e) {
-                    // Failed
-                    LOGGER.trace("Retrying lambda call on attempt {}", attempt[0]++);
-                    lastException[0] = e;
-                }
-            }
-        });
-
         try {
-            return retryThread.get(timeout, timeUnit);
-        } catch (InterruptedException | ExecutionException | java.util.concurrent.TimeoutException e) {
+            return Timeouts.withTimeout(timeout, timeUnit, () -> {
+                while (true) {
+                    try {
+                        return lambda.get();
+                    } catch (Exception e) {
+                        // Failed
+                        LOGGER.trace("Retrying lambda call on attempt {}", attempt[0]++);
+                        lastException[0] = e;
+                    }
+                }
+            });
+        } catch (org.rnorth.circuitbreakers.TimeoutException e) {
             if (lastException[0] != null) {
-                throw new TimeoutException("Timeout waiting for result with exception", lastException[0]);
+                throw new org.rnorth.circuitbreakers.TimeoutException("Timeout waiting for result with exception", lastException[0]);
             } else {
-                throw new TimeoutException(e);
+                throw new org.rnorth.circuitbreakers.TimeoutException(e);
             }
         }
-
     }
 
     /**
@@ -61,14 +57,11 @@ public abstract class Unreliables {
      * @param lambda   supplier lambda expression
      */
     public static void retryUntilTrue(final int timeout, final TimeUnit timeUnit, final Callable<Boolean> lambda) {
-        retryUntilSuccess(timeout, timeUnit, new UnreliableSupplier<Object>() {
-            @Override
-            public Object get() throws Exception {
-                if (!lambda.call()) {
-                    throw new RuntimeException("Not ready yet");
-                } else {
-                    return null;
-                }
+        retryUntilSuccess(timeout, timeUnit, () -> {
+            if (!lambda.call()) {
+                throw new RuntimeException("Not ready yet");
+            } else {
+                return null;
             }
         });
     }

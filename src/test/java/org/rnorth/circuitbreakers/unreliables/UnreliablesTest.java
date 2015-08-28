@@ -1,6 +1,7 @@
 package org.rnorth.circuitbreakers.unreliables;
 
 import org.junit.Test;
+import org.rnorth.circuitbreakers.TimeoutException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -8,7 +9,7 @@ import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 import static org.rnorth.visibleassertions.VisibleAssertions.fail;
 
 /**
- * Created by rnorth on 23/07/2015.
+ * Tests for Unreliables class.
  */
 public class UnreliablesTest {
 

@@ -1,4 +1,4 @@
-package org.rnorth.circuitbreakers.unreliables;
+package org.rnorth.circuitbreakers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
