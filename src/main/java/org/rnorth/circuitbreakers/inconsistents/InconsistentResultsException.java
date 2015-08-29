@@ -1,12 +1,12 @@
 package org.rnorth.circuitbreakers.inconsistents;
 
 /**
- * Created by rnorth on 23/07/2015.
+ * Exception caused by a failure to obtain consistent results.
  */
 public class InconsistentResultsException extends ResultsNeverConsistentException {
 
-    protected Object mostConsistentValue;
-    protected long mostConsistentTime;
+    protected final Object mostConsistentValue;
+    protected final long mostConsistentTime;
 
     public InconsistentResultsException(long timeSinceStart, Object mostConsistentValue, long mostConsistentTime) {
         super("After " + timeSinceStart + "ms, results have not become consistent. Most consistent value was " + mostConsistentValue + ", seen for " + mostConsistentTime + "ms", timeSinceStart);

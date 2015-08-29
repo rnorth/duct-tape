@@ -1,7 +1,7 @@
 package org.rnorth.circuitbreakers.inconsistents;
 
 /**
- * Created by rnorth on 23/07/2015.
+ * Exception caused by a failure to obtain consistent results.
  */
 public class ResultsNeverConsistentException extends RuntimeException {
 
@@ -13,7 +13,7 @@ public class ResultsNeverConsistentException extends RuntimeException {
     }
 
     public ResultsNeverConsistentException(long timeSinceStart) {
-        super("After " + timeSinceStart + "ms, results have not become consistent. The value was different every time!");
+        super("After " + timeSinceStart + "ms, results have not become consistent. The value was never consistent");
         this.timeSinceStart = timeSinceStart;
     }
 

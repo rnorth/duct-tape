@@ -1,5 +1,7 @@
 package org.rnorth.circuitbreakers.ratelimits;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.Callable;
 
 /**
@@ -14,7 +16,7 @@ public abstract class RateLimiter {
      * @param lambda a Runnable lamda function to invoke
      * @throws Exception rethrown from lambda
      */
-    public void invokeWhenReady(Runnable lambda) throws Exception {
+    public void doWhenReady(@NotNull final Runnable lambda) {
 
         // Wait before proceeding, if needed
         long waitBeforeNextInvocation = getWaitBeforeNextInvocation();
@@ -27,8 +29,6 @@ public abstract class RateLimiter {
         } finally {
             lastInvocation = System.currentTimeMillis();
         }
-
-
     }
 
     /**
@@ -39,7 +39,7 @@ public abstract class RateLimiter {
      * @param <T> return type of the lamda
      * @throws Exception rethrown from lambda
      */
-    public <T> T invokeWhenReady(Callable<T> lambda) throws Exception {
+    public <T> T doWhenReady(@NotNull final Callable<T> lambda) throws Exception {
 
         // Wait before proceeding, if needed
         long waitBeforeNextInvocation = getWaitBeforeNextInvocation();

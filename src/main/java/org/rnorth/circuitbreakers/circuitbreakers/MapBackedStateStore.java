@@ -1,5 +1,7 @@
 package org.rnorth.circuitbreakers.circuitbreakers;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 
 /**
@@ -9,7 +11,7 @@ class MapBackedStateStore implements StateStore {
     private final Map<String, Object> map;
     private final String keyPrefix;
 
-    public MapBackedStateStore(Map<String, Object> map, String keyPrefix) {
+    public MapBackedStateStore(@NotNull final Map<String, Object> map, @NotNull final String keyPrefix) {
         this.map = map;
         this.keyPrefix = keyPrefix;
     }
@@ -20,7 +22,7 @@ class MapBackedStateStore implements StateStore {
     }
 
     @Override
-    public void setState(State state) {
+    public void setState(@NotNull final State state) {
         this.map.put(keyPrefix + "_STATE", state);
     }
 
@@ -30,7 +32,7 @@ class MapBackedStateStore implements StateStore {
     }
 
     @Override
-    public void setLastFailure(long lastFailure) {
+    public void setLastFailure(final long lastFailure) {
         this.map.put(keyPrefix + "_LAST_FAILURE", lastFailure);
     }
 }

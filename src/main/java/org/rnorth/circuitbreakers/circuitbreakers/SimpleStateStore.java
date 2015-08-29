@@ -1,5 +1,7 @@
 package org.rnorth.circuitbreakers.circuitbreakers;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author richardnorth
  */
@@ -13,7 +15,7 @@ class SimpleStateStore implements StateStore {
     }
 
     @Override
-    public void setState(State state) {
+    public void setState(@NotNull final State state) {
         this.state = state;
     }
 
@@ -23,7 +25,7 @@ class SimpleStateStore implements StateStore {
     }
 
     @Override
-    public void setLastFailure(long lastFailure) {
+    public void setLastFailure(final long lastFailure) {
         this.lastFailure = lastFailure;
     }
 }

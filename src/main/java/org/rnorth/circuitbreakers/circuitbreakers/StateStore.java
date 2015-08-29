@@ -1,5 +1,7 @@
 package org.rnorth.circuitbreakers.circuitbreakers;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * An external store for state which a {@link Breaker} can use.
  *
@@ -15,7 +17,7 @@ package org.rnorth.circuitbreakers.circuitbreakers;
 public interface StateStore {
 
     State getState();
-    void setState(State state);
+    void setState(@NotNull State state);
 
     long getLastFailure();
     void setLastFailure(long lastFailure);

@@ -1,7 +1,11 @@
 package org.rnorth.circuitbreakers.circuitbreakers;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+
+import static org.rnorth.circuitbreakers.Preconditions.check;
 
 /**
  * BreakerBuilder
@@ -37,8 +41,7 @@ public class BreakerBuilder {
      * `BreakerBuilder`
      */
     public Breaker build() {
-        DefaultBreaker breaker = new DefaultBreaker(timeSource, autoResetInterval, autoResetUnit, stateStore);
-        return breaker;
+        return new DefaultBreaker(timeSource, autoResetInterval, autoResetUnit, stateStore);
     }
 
     /**
@@ -49,7 +52,7 @@ public class BreakerBuilder {
      *
      * @return this
      */
-    public BreakerBuilder timeSource(TimeSource timeSource) {
+    public BreakerBuilder timeSource(@NotNull TimeSource timeSource) {
         this.timeSource = timeSource;
         return this;
     }
@@ -66,7 +69,10 @@ public class BreakerBuilder {
      *
      * @return this
      */
-    public BreakerBuilder autoResetAfter(long autoResetInterval, TimeUnit autoResetUnit) {
+    public BreakerBuilder autoResetAfter(long autoResetInterval, @NotNull final TimeUnit autoResetUnit) {
+
+        check("reset interval must be greater than zero", autoResetInterval > 0);
+
         this.autoResetInterval = autoResetInterval;
         this.autoResetUnit = autoResetUnit;
         return this;
@@ -84,7 +90,7 @@ public class BreakerBuilder {
      *
      * @return this
      */
-    public BreakerBuilder storeStateIn(ConcurrentMap<String, Object> map, String keyPrefix) {
+    public BreakerBuilder storeStateIn(@NotNull final ConcurrentMap<String, Object> map, @NotNull final String keyPrefix) {
         this.stateStore = new MapBackedStateStore(map, keyPrefix);
         return this;
     }
@@ -96,7 +102,7 @@ public class BreakerBuilder {
      *
      * @return this
      */
-    public BreakerBuilder storeStateIn(StateStore stateStore) {
+    public BreakerBuilder storeStateIn(@NotNull final StateStore stateStore) {
         this.stateStore = stateStore;
         return this;
     }

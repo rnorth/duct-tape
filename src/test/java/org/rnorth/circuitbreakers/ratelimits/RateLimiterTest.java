@@ -10,7 +10,7 @@ import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertTrue;
 
 /**
- * Created by rnorth on 28/08/2015.
+ * Tests for RateLimiter.
  */
 public class RateLimiterTest {
 
@@ -25,13 +25,13 @@ public class RateLimiterTest {
                                              .build();
 
         try {
-            Timeouts.withTimeout(2, TimeUnit.SECONDS, ()-> {
+            Timeouts.doWithTimeout(2, TimeUnit.SECONDS, ()-> {
+                //noinspection InfiniteLoopStatement
                 while (true) {
-                    rateLimiter.invokeWhenReady(() -> {
+                    rateLimiter.doWhenReady(() -> {
                         testWindow[0]++;
                     });
                 }
-
             });
         } catch (TimeoutException ignored) {
             // We're just using a timeout here to limit execution to a given time
@@ -54,13 +54,13 @@ public class RateLimiterTest {
                                              .build();
 
         try {
-            Timeouts.withTimeout(2, TimeUnit.SECONDS, ()-> {
+            Timeouts.doWithTimeout(2, TimeUnit.SECONDS, ()-> {
+                //noinspection InfiniteLoopStatement
                 while (true) {
-                    lastValue[0] = rateLimiter.invokeWhenReady(() -> {
+                    lastValue[0] = rateLimiter.doWhenReady(() -> {
                         return ++testWindow[0];
                     });
                 }
-
             });
         } catch (TimeoutException ignored) {
             // We're just using a timeout here to limit execution to a given time

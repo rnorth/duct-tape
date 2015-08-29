@@ -1,5 +1,7 @@
 package org.rnorth.circuitbreakers.circuitbreakers;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +17,7 @@ class DefaultBreaker implements Breaker {
     private final TimeUnit autoResetUnit;
     private final StateStore stateStore;
 
-    DefaultBreaker(TimeSource timeSource, long autoResetInterval, TimeUnit autoResetUnit, StateStore stateStore) {
+    DefaultBreaker(@NotNull final TimeSource timeSource, final long autoResetInterval, @NotNull final TimeUnit autoResetUnit, @NotNull final StateStore stateStore) {
 
         this.timeSource = timeSource;
         this.autoResetInterval = autoResetInterval;
@@ -24,7 +26,7 @@ class DefaultBreaker implements Breaker {
     }
 
     @Override
-    public void tryDo(Runnable tryIfAlive, Runnable runOnFirstFailure, Runnable runIfBroken) {
+    public void tryDo(@NotNull final Runnable tryIfAlive, @NotNull final Runnable runOnFirstFailure, @NotNull final Runnable runIfBroken) {
         if (isBroken()) {
             runIfBroken.run();
         } else {
@@ -41,17 +43,17 @@ class DefaultBreaker implements Breaker {
     }
 
     @Override
-    public void tryDo(Runnable tryIfAlive, Runnable runIfBroken) {
+    public void tryDo(@NotNull final Runnable tryIfAlive, @NotNull final Runnable runIfBroken) {
         tryDo(tryIfAlive, Breaker::NoOp, runIfBroken);
     }
 
     @Override
-    public void tryDo(Runnable tryIfAlive) {
+    public void tryDo(@NotNull final Runnable tryIfAlive) {
         tryDo(tryIfAlive, Breaker::NoOp, Breaker::NoOp);
     }
 
     @Override
-    public <T> T tryGet(Callable<T> tryIfAlive, Runnable runOnFirstFailure, Supplier<T> getIfBroken) {
+    public <T> T tryGet(@NotNull final Callable<T> tryIfAlive, @NotNull final Runnable runOnFirstFailure, @NotNull final Supplier<T> getIfBroken) {
         if (isBroken()) {
             return getIfBroken.get();
         } else {
@@ -69,12 +71,12 @@ class DefaultBreaker implements Breaker {
     }
 
     @Override
-    public <T> T tryGet(Callable<T> tryIfAlive, Supplier<T> getIfBroken) {
+    public <T> T tryGet(@NotNull final Callable<T> tryIfAlive, @NotNull final Supplier<T> getIfBroken) {
         return tryGet(tryIfAlive, Breaker::NoOp, getIfBroken);
     }
 
     @Override
-    public <T> Optional<T> tryGet(Callable<T> tryIfAlive) {
+    public <T> Optional<T> tryGet(@NotNull final Callable<T> tryIfAlive) {
         return Optional.ofNullable(tryGet(tryIfAlive, Breaker::NoOp, () -> null));
     }
 
@@ -84,14 +86,16 @@ class DefaultBreaker implements Breaker {
     }
 
     private boolean isBroken() {
-        return this.stateStore.getState() == State.BROKEN && (timeSource.getTimeMillis() - autoResetUnit.toMillis(autoResetInterval)) < this.stateStore.getLastFailure();
+        boolean broken = this.stateStore.getState() == State.BROKEN;
+        boolean notAutoResetYet = (timeSource.getTimeMillis() - autoResetUnit.toMillis(autoResetInterval)) < this.stateStore.getLastFailure();
+        return broken && notAutoResetYet;
     }
 
-    private void setState(State state) {
+    private void setState(@NotNull final State state) {
         this.stateStore.setState(state);
     }
 
-    private void setLastFailure(long lastFailure) {
+    private void setLastFailure(final long lastFailure) {
         this.stateStore.setLastFailure(lastFailure);
     }
 }

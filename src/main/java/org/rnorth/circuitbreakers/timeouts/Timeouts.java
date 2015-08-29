@@ -24,7 +24,7 @@ public class Timeouts {
      * @param <T>      return type of the lambda
      * @return the result of the successful lambda expression call
      */
-    public static <T> T withTimeout(final int timeout, final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
+    public static <T> T doWithTimeout(final int timeout, final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
 
         check("timeout must be greater than zero", timeout > 0);
 
@@ -41,7 +41,7 @@ public class Timeouts {
      * @param timeUnit time unit for time interval
      * @param lambda   supplier lambda expression (may throw checked exceptions)
      */
-    public static void withTimeout(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Runnable lambda) {
+    public static void doWithTimeout(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Runnable lambda) {
 
         check("timeout must be greater than zero", timeout > 0);
 
@@ -49,7 +49,7 @@ public class Timeouts {
         callFuture(timeout, timeUnit, future);
     }
 
-    private static <T> T callFuture(int timeout, TimeUnit timeUnit, Future<T> future) {
+    private static <T> T callFuture(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Future<T> future) {
         try {
             return future.get(timeout, timeUnit);
         } catch (ExecutionException e) {

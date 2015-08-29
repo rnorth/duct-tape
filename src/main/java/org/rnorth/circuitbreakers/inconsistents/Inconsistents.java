@@ -1,9 +1,12 @@
 package org.rnorth.circuitbreakers.inconsistents;
 
+import org.jetbrains.annotations.NotNull;
 import org.rnorth.circuitbreakers.unreliables.Unreliables;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+
+import static org.rnorth.circuitbreakers.Preconditions.check;
 
 /**
  * Utility for calling a supplier that may take time to stabilise on a final result.
@@ -23,7 +26,10 @@ public class Inconsistents {
      * @param <T> the return type of the UnreliableSupplier
      * @return the result of the supplier if it returned a consistent result for the specified interval
      */
-    public static <T> T retryUntilConsistent(int consistentTime, int totalTimeout, TimeUnit timeUnit, Callable<T> lambda) {
+    public static <T> T retryUntilConsistent(final int consistentTime, final int totalTimeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
+
+        check("consistent time must be greater than 0", consistentTime > 0);
+        check("total timeout must be greater than 0", totalTimeout > 0);
 
         long start = System.currentTimeMillis();
 

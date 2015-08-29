@@ -1,10 +1,14 @@
 package org.rnorth.circuitbreakers.unreliables;
 
+import org.jetbrains.annotations.NotNull;
 import org.rnorth.circuitbreakers.timeouts.Timeouts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+import static org.rnorth.circuitbreakers.Preconditions.check;
 
 /**
  * Utilities to support automatic retry of things that may fail.
@@ -23,12 +27,15 @@ public abstract class Unreliables {
      * @param <T>      return type of the supplier
      * @return the result of the successful lambda expression call
      */
-    public static <T> T retryUntilSuccess(final int timeout, final TimeUnit timeUnit, final Callable<T> lambda) {
+    public static <T> T retryUntilSuccess(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
+
+        check("timeout must be greater than zero", timeout > 0);
+
         final int[] attempt = {0};
         final Exception[] lastException = {null};
 
         try {
-            return Timeouts.withTimeout(timeout, timeUnit, () -> {
+            return Timeouts.doWithTimeout(timeout, timeUnit, () -> {
                 while (true) {
                     try {
                         return lambda.call();
@@ -56,7 +63,7 @@ public abstract class Unreliables {
      * @param timeUnit time unit for time interval
      * @param lambda   supplier lambda expression
      */
-    public static void retryUntilTrue(final int timeout, final TimeUnit timeUnit, final Callable<Boolean> lambda) {
+    public static void retryUntilTrue(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<Boolean> lambda) {
         retryUntilSuccess(timeout, timeUnit, () -> {
             if (!lambda.call()) {
                 throw new RuntimeException("Not ready yet");
