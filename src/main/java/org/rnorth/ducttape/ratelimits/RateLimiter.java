@@ -14,7 +14,6 @@ public abstract class RateLimiter {
     /**
      * Invoke a lambda function, with Thread.sleep() being called to limit the execution rate if needed.
      * @param lambda a Runnable lamda function to invoke
-     * @throws Exception rethrown from lambda
      */
     public void doWhenReady(@NotNull final Runnable lambda) {
 
@@ -38,6 +37,7 @@ public abstract class RateLimiter {
      * @param lambda a Callable lamda function to invoke
      * @param <T> return type of the lamda
      * @throws Exception rethrown from lambda
+     * @return result of the lambda call
      */
     public <T> T getWhenReady(@NotNull final Callable<T> lambda) throws Exception {
 
