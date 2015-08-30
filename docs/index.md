@@ -3,7 +3,7 @@
 > Duct Tape is a little Java 8 library providing fault tolerance support for code that calls external APIs and
   unreliable components, including those that may fail, time out, or return inconsistent results.
 
-![Logo](https://raw.githubusercontent.com/rnorth/circuitbreakers/rename/docs/logo.png)
+![Logo](https://raw.githubusercontent.com/rnorth/duct-tape/master/docs/logo.png)
 
 This library was formerly named `circuitbreakers`, but given the inclusion of more general purpose fault tolerance
 features, it was renamed.
