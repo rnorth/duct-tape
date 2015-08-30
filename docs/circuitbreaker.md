@@ -36,11 +36,16 @@ be called on subsequent invocations as long as the breaker remains in the `OK` s
 If **1** throws an exception, **2** and **3** will be called immediately, and the breaker will change into
 the `BROKEN` state. Thereafter, every time this code is hit **3** will be called.
 
+## Key Javadocs
+
+* **[BreakerBuilder](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/circuitbreakers/BreakerBuilder.html)**
+* **[Breaker](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/circuitbreakers/Breaker.html)**
+
 ## Features/TODOs
 
 * Support for calling a void-return `Runnable`, or getting a value from a `Callable` (see `tryDo` and `tryGet` methods)
-* Optional automatic reset a given time after the last failure
-* Optional holding of state in an external object or Map (aimed at allowing breaker state to be shared across a cluster)
+* Optional automatic reset a given time after the last failure ([javadocs](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/circuitbreakers/BreakerBuilder.html#autoResetAfter-long-java.util.concurrent.TimeUnit-))
+* Optional holding of state in an external object or Map (aimed at allowing breaker state to be shared across a cluster - [javadocs](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/circuitbreakers/BreakerBuilder.html#storeStateIn-java.util.concurrent.ConcurrentMap-java.lang.String-))
 * TODO: Configurable trip after _n_ consecutive failures
 * TODO: Configurable trip at _x_% failure rate
 * TODO: Configurable logging of breaker state transitions

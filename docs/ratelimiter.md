@@ -21,3 +21,8 @@ Limit calls to a third party service to a maximum of 2 per second.
     result = sharedRateLimiter.getWhenReady(() -> {
         return externalApi.fetchSomethingById(id)
     });
+
+## Key Javadocs
+
+* **[RateLimiterBuilder](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/ratelimits/RateLimiterBuilder.html)**
+* **[RateLimiter](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/ratelimits/RateLimiter.html)**

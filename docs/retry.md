@@ -13,16 +13,18 @@ a polling approach. These retry functions try to reduce the amount of boilerplat
 
 ## Calling *unreliable* code
 
-The `Unreliables` class caters for calls that may be unreliable:
-* `retryUntilSuccess` retries a call that might throw exceptions. The call will be repeated (up to a time limit)
+The [Unreliables](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/unreliables/Unreliables.html) class caters for
+calls that may be unreliable:
+* [retryUntilSuccess](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/unreliables/Unreliables.html#retryUntilSuccess-int-java.util.concurrent.TimeUnit-java.util.concurrent.Callable-) retries a call that might throw exceptions. The call will be repeated (up to a time limit)
    until it returns a result.
-* `retryUntilTrue` retries a call until it returns `true`
+* [retryUntilTrue](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/unreliables/Unreliables.html#retryUntilTrue-int-java.util.concurrent.TimeUnit-java.util.concurrent.Callable-) retries a call until it returns `true`
 
 ## Calling *inconsistent* code
 
-The `Inconsistents` class deals with calls that might return a result quickly, but that take some time to stabilize
-on a consistent result. A call wrapped with `retryUntilConsistent` will be called until the result is stable (equal) for
-a minimum period of time, or until a time limit is hit.
+The [Inconsistents](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/inconsistents/Inconsistents.html)
+class deals with calls that might return a result quickly, but that take some time to stabilize
+on a consistent result. A call wrapped with [retryUntilConsistent](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/inconsistents/Inconsistents.html#retryUntilConsistent-int-int-java.util.concurrent.TimeUnit-java.util.concurrent.Callable-)
+will be called until the result is stable (equal) for a minimum period of time, or until a time limit is hit.
 
 ## A note about retry frequency
 
@@ -49,3 +51,8 @@ Wait until a collection of UI elements has been fully updated by JavaScript code
     List<WebElement> listItems = Inconsistents.retryUntilConsistent(300, 1000, TimeUnit.MILLISECONDS, () -> {
         return driver.findElements(By.cssSelector("li.product"));
     });
+
+## Key Javadocs
+
+* **[Unreliables](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/unreliables/Unreliables.html)**
+* **[Inconsistents](http://rnorth.github.io/duct-tape/org/rnorth/ducttape/inconsistents/Inconsistents.html)**

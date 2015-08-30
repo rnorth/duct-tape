@@ -19,6 +19,10 @@ features, it was renamed.
 * **[Timeout functions](timeout.md):** quick and easy wrappers for code to automatically limit execution time
 * **[Rate limiter](ratelimiter.md) implementation:** limit how often a block of code can be called
 
+## Javadocs
+
+See [here](http://rnorth.github.io/duct-tape/index.html)
+
 ## Example
 
 This example combines several of the above features:
