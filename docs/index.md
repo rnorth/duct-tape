@@ -10,14 +10,16 @@ features, it was renamed.
 
 [![Circle CI](https://circleci.com/gh/rnorth/duct-tape.svg?style=svg)](https://circleci.com/gh/rnorth/duct-tape)
 
+[View on Github](https://github.com/rnorth/duct-tape)
+
 ## Features
 
-* **[Circuit breaker](circuitbreaker.md) pattern implementation:** graceful isolation of an external component after a
+* **[Circuit breakers](circuitbreaker.md):** graceful isolation of an external component after a
   failure occurs
 * **[Automatic retry functions](retry.md):** try/retry a block of code until it succeeds, returns true, or returns a
   consistent result for long enough.
 * **[Timeout functions](timeout.md):** quick and easy wrappers for code to automatically limit execution time
-* **[Rate limiter](ratelimiter.md) implementation:** limit how often a block of code can be called
+* **[Rate limiter](ratelimiter.md):** limit how often a block of code can be called
 
 ## Javadocs
 
