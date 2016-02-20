@@ -1,3 +1,12 @@
+## [1.0.5] - 2016-02-20
+
+* Add retry-until-count option (as alternative to until timeout) to `Unreliables`
+
+## [1.0.4] - 2015-08-30
+
+* Rename to 'duct-tape'
+* Add `Timeouts` and `RateLimiter`
+
 ## [1.0.3] - 2015-08-04
 
 * Add `Unreliables` and `Inconsistents` wrappers
@@ -10,5 +19,7 @@
 
 * Initial release
 
-[1.0.3]: https://github.com/rnorth/circuitbreakers/releases/tag/circuitbreakers-1.0.3
-[1.0.2]: https://github.com/rnorth/circuitbreakers/releases/tag/circuitbreakers-1.0.2
+[1.0.5]: https://github.com/rnorth/duct-tape/releases/tag/duct-tape-1.0.5
+[1.0.4]: https://github.com/rnorth/duct-tape/releases/tag/duct-tape-1.0.4
+[1.0.3]: https://github.com/rnorth/duct-tape/releases/tag/circuitbreakers-1.0.3
+[1.0.2]: https://github.com/rnorth/duct-tape/releases/tag/circuitbreakers-1.0.2

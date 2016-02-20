@@ -1,11 +1,13 @@
 package org.rnorth.ducttape.unreliables;
 
 import org.junit.Test;
+import org.rnorth.ducttape.RetryCountExceededException;
 import org.rnorth.ducttape.TimeoutException;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
+import static org.rnorth.visibleassertions.VisibleAssertions.assertThrows;
 import static org.rnorth.visibleassertions.VisibleAssertions.fail;
 
 /**
@@ -124,5 +126,59 @@ public class UnreliablesTest {
             // ok
             assertEquals("A result can be returned using retryUntilSuccess", "This is the exception", e.getCause().getMessage());
         }
+    }
+
+    @Test
+    public void testRetryUntilSuccessPassesForSuccessWithinCount() throws Exception {
+
+        final int[] attempt = {0};
+
+        String result = Unreliables.retryUntilSuccess(3, () -> {
+            attempt[0]++;
+            if (attempt[0] == 2) {
+                return "OK";
+            } else {
+                throw new IllegalStateException("This will fail sometimes");
+            }
+        });
+        assertEquals("If success happens before the retry limit, that's OK", "OK", result);
+    }
+
+    @Test
+    public void testRetryUntilSuccessFailsForFailuresOutsideCount() throws Exception {
+        try {
+            Unreliables.retryUntilSuccess(3, () -> {
+                throw new IllegalStateException("This will always fail");
+            });
+            fail("When retrying until true, a return true outside the timeout window should throw a retry failure exception");
+        } catch (RetryCountExceededException e) {
+            // ok
+            assertEquals("A result can be returned using retryUntilSuccess", "This will always fail", e.getCause().getMessage());
+        }
+    }
+
+    @Test
+    public void testRetryUntilTruePassesForSuccessWithinCount() throws Exception {
+
+        final int[] attempt = {0};
+
+        Unreliables.retryUntilTrue(3, () -> {
+            attempt[0]++;
+            if (attempt[0] == 2) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+    @Test
+    public void testRetryUntilTrueFailsForFailuresOutsideCount() throws Exception {
+
+        assertThrows("When retrying until true, a return true outside the timeout window should throw a retry failure exception",
+                RetryCountExceededException.class,
+                () -> {
+                    Unreliables.retryUntilTrue(3, () -> false);
+        });
     }
 }

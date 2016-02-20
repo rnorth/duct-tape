@@ -56,6 +56,34 @@ public abstract class Unreliables {
     }
 
     /**
+     * Call a supplier repeatedly until it returns a result. If an exception is thrown, the call
+     * will be retried repeatedly until the retry limit is hit.
+     *
+     * @param tryLimit how many times to try calling the supplier
+     * @param lambda   supplier lambda expression (may throw checked exceptions)
+     * @param <T>      return type of the supplier
+     * @return the result of the successful lambda expression call
+     */
+    public static <T> T retryUntilSuccess(final int tryLimit, @NotNull final Callable<T> lambda) {
+
+        check("tryLimit must be greater than zero", tryLimit > 0);
+
+        int attempt = 0;
+        Exception lastException = null;
+
+        while (attempt < tryLimit) {
+            try {
+                return lambda.call();
+            } catch (Exception e) {
+                lastException = e;
+                attempt++;
+            }
+        }
+
+        throw new org.rnorth.ducttape.RetryCountExceededException("Retry limit hit with exception", lastException);
+    }
+
+    /**
      * Call a callable repeatedly until it returns true. If an exception is thrown, the call
      * will be retried repeatedly until the timeout is hit.
      *
@@ -65,6 +93,23 @@ public abstract class Unreliables {
      */
     public static void retryUntilTrue(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<Boolean> lambda) {
         retryUntilSuccess(timeout, timeUnit, () -> {
+            if (!lambda.call()) {
+                throw new RuntimeException("Not ready yet");
+            } else {
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Call a callable repeatedly until it returns true. If an exception is thrown, the call
+     * will be retried repeatedly until the timeout is hit.
+     *
+     * @param tryLimit how many times to try calling the supplier
+     * @param lambda   supplier lambda expression
+     */
+    public static void retryUntilTrue(final int tryLimit, @NotNull final Callable<Boolean> lambda) {
+        retryUntilSuccess(tryLimit, () -> {
             if (!lambda.call()) {
                 throw new RuntimeException("Not ready yet");
             } else {
