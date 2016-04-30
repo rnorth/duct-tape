@@ -38,7 +38,7 @@ public class Inconsistents {
         long[] bestRun = {0};
         Object[] bestRunValue = {null};
 
-        long consistentTimeInMillis = timeUnit.convert(consistentTime, TimeUnit.MILLISECONDS);
+        long consistentTimeInMillis = TimeUnit.MILLISECONDS.convert(consistentTime, timeUnit);
 
         return Unreliables.retryUntilSuccess(totalTimeout, timeUnit, () -> {
             T value = lambda.call();
