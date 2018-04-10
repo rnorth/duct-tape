@@ -3,6 +3,7 @@ package org.rnorth.ducttape.timeouts;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.rnorth.ducttape.Preconditions.check;
 
@@ -11,7 +12,17 @@ import static org.rnorth.ducttape.Preconditions.check;
  */
 public class Timeouts {
 
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool(new ThreadFactory() {
+
+        final AtomicInteger threadCounter = new AtomicInteger(0);
+
+        @Override
+        public Thread newThread(@NotNull Runnable r) {
+            Thread thread = new Thread(r, "ducttape-" + threadCounter.getAndIncrement());
+            thread.setDaemon(true);
+            return thread;
+        }
+    });
 
     /**
      * Execute a lambda expression with a timeout. If it completes within the time, the result will be returned.
