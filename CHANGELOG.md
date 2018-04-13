@@ -1,3 +1,7 @@
+## Unreleased
+
+* Mark Timeouts' thread as daemon and name it. ([#4](https://github.com/rnorth/duct-tape/pull/4))
+
 ## [1.0.5] - 2016-02-20
 
 * Add retry-until-count option (as alternative to until timeout) to `Unreliables`
