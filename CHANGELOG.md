@@ -1,4 +1,4 @@
-## [1.0.6] - 2018-04-14
+## [1.0.7] - 2018-04-14
 
 * Mark Timeouts' thread as daemon and name it. ([#4](https://github.com/rnorth/duct-tape/pull/4))
 
