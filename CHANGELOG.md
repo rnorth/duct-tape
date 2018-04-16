@@ -1,6 +1,7 @@
-## [1.0.7] - 2018-04-14
+## [1.0.7] - 2018-04-16
 
 * Mark Timeouts' thread as daemon and name it. ([#4](https://github.com/rnorth/duct-tape/pull/4))
+* Make Unreliables stop calling lambda after timeout occurs. ([#5](https://github.com/rnorth/duct-tape/pull/5))
 
 ## [1.0.5] - 2016-02-20
 

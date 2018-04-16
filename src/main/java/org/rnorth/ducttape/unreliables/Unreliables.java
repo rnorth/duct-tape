@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.rnorth.ducttape.Preconditions.check;
 
@@ -34,9 +35,10 @@ public abstract class Unreliables {
         final int[] attempt = {0};
         final Exception[] lastException = {null};
 
+        final AtomicBoolean doContinue = new AtomicBoolean(true);
         try {
             return Timeouts.getWithTimeout(timeout, timeUnit, () -> {
-                while (true) {
+                while (doContinue.get()) {
                     try {
                         return lambda.call();
                     } catch (Exception e) {
@@ -45,6 +47,7 @@ public abstract class Unreliables {
                         lastException[0] = e;
                     }
                 }
+                return null;
             });
         } catch (org.rnorth.ducttape.TimeoutException e) {
             if (lastException[0] != null) {
@@ -52,6 +55,8 @@ public abstract class Unreliables {
             } else {
                 throw new org.rnorth.ducttape.TimeoutException(e);
             }
+        } finally {
+            doContinue.set(false);
         }
     }
 

@@ -5,8 +5,10 @@ import org.rnorth.ducttape.RetryCountExceededException;
 import org.rnorth.ducttape.TimeoutException;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
+import static org.rnorth.visibleassertions.VisibleAssertions.assertFalse;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertThrows;
 import static org.rnorth.visibleassertions.VisibleAssertions.fail;
 
@@ -112,6 +114,24 @@ public class UnreliablesTest {
         } catch (TimeoutException e) {
             // ok
             assertEquals("A result can be returned using retryUntilSuccess", "NOT OK", result);
+        }
+    }
+
+    @Test
+    public void testRetryUntilSuccessLambdaStopsBeingCalledAfterTimeout() throws Exception {
+        AtomicBoolean lambdaCalled = new AtomicBoolean();
+        try {
+            Unreliables.retryUntilSuccess(200, TimeUnit.MILLISECONDS, () -> {
+                lambdaCalled.set(true);
+                throw new RuntimeException();
+            });
+            fail("Expected TimeoutException on retryUntilSuccess that always returns false.");
+        } catch (TimeoutException e) {
+            // ok
+            Thread.sleep(200); // give worker thread time to stop calling the lambda
+            lambdaCalled.set(false);
+            Thread.sleep(200); // give worker thread time to call the lambda if it is still running
+            assertFalse("Lambda should stop being executed when retryUntilSuccess times out.", lambdaCalled.get());
         }
     }
 
