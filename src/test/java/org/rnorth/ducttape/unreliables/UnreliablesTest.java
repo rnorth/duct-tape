@@ -125,7 +125,7 @@ public class UnreliablesTest {
                 lambdaCalled.set(true);
                 throw new RuntimeException();
             });
-            fail("Expected TimeoutException on retryUntilSuccess that always returns false.");
+            fail("Expected TimeoutException on retryUntilSuccess that always fails.");
         } catch (TimeoutException e) {
             // ok
             Thread.sleep(200); // give worker thread time to stop calling the lambda
