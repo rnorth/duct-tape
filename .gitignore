@@ -55,4 +55,9 @@ build/
 # Ignore Gradle GUI config
 gradle-app.setting
 
-
+# VS Code
+target/
+.classpath
+.vscode/
+.settings/
+.project
