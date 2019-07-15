@@ -28,7 +28,7 @@ public abstract class Unreliables {
      * @param <T>      return type of the supplier
      * @return the result of the successful lambda expression call
      */
-    public static <T> T retryUntilSuccess(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
+    public static <T> T retryUntilSuccess(final long timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
 
         check("timeout must be greater than zero", timeout > 0);
 
@@ -96,7 +96,7 @@ public abstract class Unreliables {
      * @param timeUnit time unit for time interval
      * @param lambda   supplier lambda expression
      */
-    public static void retryUntilTrue(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<Boolean> lambda) {
+    public static void retryUntilTrue(final long timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<Boolean> lambda) {
         retryUntilSuccess(timeout, timeUnit, () -> {
             if (!lambda.call()) {
                 throw new RuntimeException("Not ready yet");

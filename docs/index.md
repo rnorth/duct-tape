@@ -93,7 +93,7 @@ See [LICENSE](LICENSE).
 	* discuss with the authors on an issue ticket prior to doing anything big
 	* follow the style, naming and structure conventions of the rest of the project
 	* make commits atomic and easy to merge
-	* verify all tests are passing. Build the project with `mvn clean install` to do this.
+	* verify all tests are passing. Build the project with `./mvnw clean install` to do this.
 
 ## Copyright
 

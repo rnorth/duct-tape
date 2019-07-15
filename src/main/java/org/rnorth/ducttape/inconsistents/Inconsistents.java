@@ -15,18 +15,18 @@ public class Inconsistents {
 
     /**
      * Retry invocation of a supplier repeatedly until it returns a consistent result for a sufficient time period.
-     *
+     * <p>
      * This is intended for calls to components that take an unknown amount of time to stabilise, and where
      * repeated checks are the only way to detect that a stable state has been reached.
      *
      * @param consistentTime how long the result should be consistent for before it is returned
-     * @param totalTimeout how long in total to wait for stabilisation to occur
-     * @param timeUnit time unit for time intervals
-     * @param lambda an UnreliableSupplier which should be called
-     * @param <T> the return type of the UnreliableSupplier
+     * @param totalTimeout   how long in total to wait for stabilisation to occur
+     * @param timeUnit       time unit for time intervals
+     * @param lambda         an UnreliableSupplier which should be called
+     * @param <T>            the return type of the UnreliableSupplier
      * @return the result of the supplier if it returned a consistent result for the specified interval
      */
-    public static <T> T retryUntilConsistent(final int consistentTime, final int totalTimeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
+    public static <T> T retryUntilConsistent(final long consistentTime, final long totalTimeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
 
         check("consistent time must be greater than 0", consistentTime > 0);
         check("total timeout must be greater than 0", totalTimeout > 0);
