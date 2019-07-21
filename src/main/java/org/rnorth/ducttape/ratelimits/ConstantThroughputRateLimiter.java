@@ -11,7 +11,7 @@ class ConstantThroughputRateLimiter extends RateLimiter {
 
     private final long timeBetweenInvocations;
 
-    ConstantThroughputRateLimiter(@NotNull Integer rate, @NotNull TimeUnit perTimeUnit) {
+    ConstantThroughputRateLimiter(@NotNull Long rate, @NotNull TimeUnit perTimeUnit) {
         this.timeBetweenInvocations = perTimeUnit.toMillis(1) / rate;
     }
 

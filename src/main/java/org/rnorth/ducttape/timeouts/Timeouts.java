@@ -2,7 +2,14 @@ package org.rnorth.ducttape.timeouts;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.rnorth.ducttape.Preconditions.check;
@@ -35,7 +42,7 @@ public class Timeouts {
      * @param <T>      return type of the lambda
      * @return the result of the successful lambda expression call
      */
-    public static <T> T getWithTimeout(final int timeout, final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
+    public static <T> T getWithTimeout(final long timeout, final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
 
         check("timeout must be greater than zero", timeout > 0);
 
@@ -52,7 +59,7 @@ public class Timeouts {
      * @param timeUnit time unit for time interval
      * @param lambda   supplier lambda expression (may throw checked exceptions)
      */
-    public static void doWithTimeout(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Runnable lambda) {
+    public static void doWithTimeout(final long timeout, @NotNull final TimeUnit timeUnit, @NotNull final Runnable lambda) {
 
         check("timeout must be greater than zero", timeout > 0);
 
@@ -60,7 +67,7 @@ public class Timeouts {
         callFuture(timeout, timeUnit, future);
     }
 
-    private static <T> T callFuture(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Future<T> future) {
+    private static <T> T callFuture(final long timeout, @NotNull final TimeUnit timeUnit, @NotNull final Future<T> future) {
         try {
             return future.get(timeout, timeUnit);
         } catch (ExecutionException e) {

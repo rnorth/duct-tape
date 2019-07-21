@@ -9,14 +9,16 @@ import static org.rnorth.ducttape.Preconditions.check;
  */
 public class RateLimiterBuilder {
 
-    private Integer invocations;
+    private Long invocations;
     private TimeUnit perTimeUnit;
     private RateLimiterStrategy strategy;
 
-    private RateLimiterBuilder() { }
+    private RateLimiterBuilder() {
+    }
 
     /**
      * Obtain a new builder instance.
+     *
      * @return a new builder
      */
     public static RateLimiterBuilder newBuilder() {
@@ -26,11 +28,12 @@ public class RateLimiterBuilder {
     /**
      * Set the maximum rate that the limiter should allow, expressed as the number of invocations
      * allowed in a given time period.
-     * @param invocations   number of invocations
-     * @param perTimeUnit   the time period in which this number of invocations are allowed
+     *
+     * @param invocations number of invocations
+     * @param perTimeUnit the time period in which this number of invocations are allowed
      * @return the builder
      */
-    public RateLimiterBuilder withRate(final int invocations, final TimeUnit perTimeUnit) {
+    public RateLimiterBuilder withRate(final long invocations, final TimeUnit perTimeUnit) {
         this.invocations = invocations;
         this.perTimeUnit = perTimeUnit;
         return this;
@@ -38,6 +41,7 @@ public class RateLimiterBuilder {
 
     /**
      * Configure the rate limiter to use a constant throughput strategy for rate limiting.
+     *
      * @return the builder
      */
     public RateLimiterBuilder withConstantThroughput() {
@@ -47,6 +51,7 @@ public class RateLimiterBuilder {
 
     /**
      * Build and obtain a configured rate limiter. A rate and rate limiting strategy must have been selected.
+     *
      * @return the configured rate limiter instance
      */
     public RateLimiter build() {
