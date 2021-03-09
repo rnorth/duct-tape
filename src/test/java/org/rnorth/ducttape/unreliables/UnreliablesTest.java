@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.rnorth.ducttape.RetryCountExceededException;
 import org.rnorth.ducttape.TimeoutException;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,6 +24,25 @@ public class UnreliablesTest {
             Unreliables.retryUntilTrue(500, TimeUnit.MILLISECONDS, () -> true);
         } catch (TimeoutException e) {
             fail("When retrying until true, an immediate return true should be OK but timed out");
+        }
+    }
+
+    @Test
+    public void testRetryUntilAnExceptionIsThrown() throws Exception {
+        try {
+            Unreliables.retryUntilTrue(5000, TimeUnit.MILLISECONDS, () -> {
+                if (new Random().nextInt(2) == 1) {
+                    throw new IllegalStateException();
+                }
+                return false;
+            }, IllegalStateException.class);
+        } catch (Exception e) {
+            while (e.getCause() != null || !e.getClass().equals(IllegalStateException.class)) {
+                e = (Exception) e.getCause();
+            }
+            if (!e.getClass().equals(IllegalStateException.class)) {
+                fail("When an exception is thrown excution should not be proceeded with");
+            }
         }
     }
 
