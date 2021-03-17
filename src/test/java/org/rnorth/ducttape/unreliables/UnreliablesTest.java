@@ -1,5 +1,6 @@
 package org.rnorth.ducttape.unreliables;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.rnorth.ducttape.RetryCountExceededException;
 import org.rnorth.ducttape.TimeoutException;
@@ -37,13 +38,19 @@ public class UnreliablesTest {
                 return false;
             }, IllegalStateException.class);
         } catch (Exception e) {
-            while (e.getCause() != null || !e.getClass().equals(IllegalStateException.class)) {
-                e = (Exception) e.getCause();
-            }
+            e = getRootCause(e);
             if (!e.getClass().equals(IllegalStateException.class)) {
                 fail("When an exception is thrown excution should not be proceeded with");
             }
         }
+    }
+
+    @NotNull
+    private Exception getRootCause(Exception e) {
+        while (e.getCause() != null || !e.getClass().equals(IllegalStateException.class)) {
+            e = (Exception) e.getCause();
+        }
+        return e;
     }
 
     @Test

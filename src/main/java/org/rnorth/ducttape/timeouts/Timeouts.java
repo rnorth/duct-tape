@@ -65,7 +65,7 @@ public class Timeouts {
             return future.get(timeout, timeUnit);
         } catch (ExecutionException e) {
             // The cause of the ExecutionException is the actual exception that was thrown
-            throw new RuntimeException(e.getCause());
+            throw new org.rnorth.ducttape.ExecutionException(e.getCause());
         } catch (TimeoutException | InterruptedException e) {
             throw new org.rnorth.ducttape.TimeoutException(e);
         }
