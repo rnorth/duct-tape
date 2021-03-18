@@ -40,7 +40,7 @@ public class UnreliablesTest {
         } catch (Exception e) {
             e = getRootCause(e);
             if (!e.getClass().equals(IllegalStateException.class)) {
-                fail("When an exception is thrown excution should not be proceeded with");
+                fail("When an exception is thrown execution should not be proceeded with");
             }
         }
     }
