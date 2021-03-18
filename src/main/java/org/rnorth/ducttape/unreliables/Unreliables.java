@@ -22,13 +22,14 @@ public abstract class Unreliables {
      * Call a supplier repeatedly until it returns a result. If an exception is thrown, the call
      * will be retried repeatedly until the timeout is hit.
      *
-     * @param timeout  how long to wait
-     * @param timeUnit time unit for time interval
-     * @param lambda   supplier lambda expression (may throw checked exceptions)
-     * @param <T>      return type of the supplier
+     * @param timeout             how long to wait
+     * @param timeUnit            time unit for time interval
+     * @param lambda              supplier lambda expression (may throw checked exceptions)
+     * @param exceptionsToRethrow exceptions which cause the retry loop to be aborted and are rethrown
+     * @param <T>                 return type of the supplier
      * @return the result of the successful lambda expression call
      */
-    public static <T> T retryUntilSuccess(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda) {
+    public static <T, E extends Exception> T retryUntilSuccess(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<T> lambda, Class<E>... exceptionsToRethrow) {
 
         check("timeout must be greater than zero", timeout > 0);
 
@@ -43,6 +44,8 @@ public abstract class Unreliables {
                         return lambda.call();
                     } catch (Exception e) {
                         // Failed
+                        rethrowIfIsInstanceOf(e, exceptionsToRethrow);
+
                         LOGGER.trace("Retrying lambda call on attempt {}", attempt[0]++);
                         lastException[0] = e;
                     }
@@ -60,16 +63,25 @@ public abstract class Unreliables {
         }
     }
 
+    private static <E extends Exception> void rethrowIfIsInstanceOf(Exception e, Class<E>[] exceptionalExceptions) {
+        for (int i = 0; i < exceptionalExceptions.length; i++) {
+            if (e.getClass().equals(exceptionalExceptions[i])) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     /**
      * Call a supplier repeatedly until it returns a result. If an exception is thrown, the call
      * will be retried repeatedly until the retry limit is hit.
      *
-     * @param tryLimit how many times to try calling the supplier
-     * @param lambda   supplier lambda expression (may throw checked exceptions)
-     * @param <T>      return type of the supplier
+     * @param tryLimit            how many times to try calling the supplier
+     * @param lambda              supplier lambda expression (may throw checked exceptions)
+     * @param exceptionsToRethrow exceptions which cause the retry loop to be aborted and are rethrown
+     * @param <T>                 return type of the supplier
      * @return the result of the successful lambda expression call
      */
-    public static <T> T retryUntilSuccess(final int tryLimit, @NotNull final Callable<T> lambda) {
+    public static <T, E extends Exception> T retryUntilSuccess(final int tryLimit, @NotNull final Callable<T> lambda, Class<E>... exceptionsToRethrow) {
 
         check("tryLimit must be greater than zero", tryLimit > 0);
 
@@ -80,6 +92,8 @@ public abstract class Unreliables {
             try {
                 return lambda.call();
             } catch (Exception e) {
+                rethrowIfIsInstanceOf(e, exceptionsToRethrow);
+
                 lastException = e;
                 attempt++;
             }
@@ -92,34 +106,36 @@ public abstract class Unreliables {
      * Call a callable repeatedly until it returns true. If an exception is thrown, the call
      * will be retried repeatedly until the timeout is hit.
      *
-     * @param timeout  how long to wait
-     * @param timeUnit time unit for time interval
-     * @param lambda   supplier lambda expression
+     * @param timeout             how long to wait
+     * @param timeUnit            time unit for time interval
+     * @param lambda              supplier lambda expression
+     * @param exceptionsToRethrow exceptions which cause the retry loop to be aborted and are rethrown
      */
-    public static void retryUntilTrue(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<Boolean> lambda) {
+    public static <E extends Exception> void retryUntilTrue(final int timeout, @NotNull final TimeUnit timeUnit, @NotNull final Callable<Boolean> lambda, Class<E>... exceptionsToRethrow) {
         retryUntilSuccess(timeout, timeUnit, () -> {
             if (!lambda.call()) {
                 throw new RuntimeException("Not ready yet");
             } else {
                 return null;
             }
-        });
+        }, exceptionsToRethrow);
     }
 
     /**
      * Call a callable repeatedly until it returns true. If an exception is thrown, the call
      * will be retried repeatedly until the timeout is hit.
      *
-     * @param tryLimit how many times to try calling the supplier
-     * @param lambda   supplier lambda expression
+     * @param tryLimit            how many times to try calling the supplier
+     * @param lambda              supplier lambda expression
+     * @param exceptionsToRethrow exceptions which cause the retry loop to be aborted and are rethrown
      */
-    public static void retryUntilTrue(final int tryLimit, @NotNull final Callable<Boolean> lambda) {
+    public static <E extends Exception> void retryUntilTrue(final int tryLimit, @NotNull final Callable<Boolean> lambda, Class<E>... exceptionsToRethrow) {
         retryUntilSuccess(tryLimit, () -> {
             if (!lambda.call()) {
                 throw new RuntimeException("Not ready yet");
             } else {
                 return null;
             }
-        });
+        }, exceptionsToRethrow);
     }
 }

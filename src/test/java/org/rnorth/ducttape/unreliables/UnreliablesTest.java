@@ -1,9 +1,11 @@
 package org.rnorth.ducttape.unreliables;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.rnorth.ducttape.RetryCountExceededException;
 import org.rnorth.ducttape.TimeoutException;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -24,6 +26,31 @@ public class UnreliablesTest {
         } catch (TimeoutException e) {
             fail("When retrying until true, an immediate return true should be OK but timed out");
         }
+    }
+
+    @Test
+    public void testRetryUntilAnExceptionIsThrown() throws Exception {
+        try {
+            Unreliables.retryUntilTrue(5000, TimeUnit.MILLISECONDS, () -> {
+                if (new Random().nextInt(2) == 1) {
+                    throw new IllegalStateException();
+                }
+                return false;
+            }, IllegalStateException.class);
+        } catch (Exception e) {
+            e = getRootCause(e);
+            if (!e.getClass().equals(IllegalStateException.class)) {
+                fail("When an exception is thrown execution should not be proceeded with");
+            }
+        }
+    }
+
+    @NotNull
+    private Exception getRootCause(Exception e) {
+        while (e.getCause() != null || !e.getClass().equals(IllegalStateException.class)) {
+            e = (Exception) e.getCause();
+        }
+        return e;
     }
 
     @Test
